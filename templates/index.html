@@ -2,25 +2,35 @@
 <!DOCTYPE html>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
 <html>
-  <div class="container"
+  <div class="container">
   <head>
-    <title>lol</title>
+    <title>Civil Service Jobs Helper</title>
   </head>
   </div>
   <body>
+
     <header>
       <h1>{{title}}</h1>
     </header>
     <div class="container">
       <main>
          <body> 
-        <h2>{{main_content_title}}</h2>
-        {% for table in tables %}
+        <p>{{var_test}}</p>
+        <!-- button that runs function_test -->
+        <form action="{{ url_for('main') }}" method="post">
+          User text? <input type="text" name="user_text"><br>
+          <input type="submit" value="Submit">
+      </form>
+        <br>
+        <br>
+        
+          <h2>{{main_content_title}}</h2>
+          {% for table in tables %}
           {{titles[loop.index]}}
           {{ table|safe }}
           {% endfor %}
-  
-          
+        
+       
           </body>
       </main>
     </div>
