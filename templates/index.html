@@ -22,15 +22,14 @@
           <input type="submit" value="Submit">
       </form>
         <br>
-        <br>
-        
-          <h2>{{main_content_title}}</h2>
+        <h2>{{main_content_title}}</h2>
+        <table class="table" name="vacancy_table" style="border: 3px solid black;">
           {% for table in tables %}
           {{titles[loop.index]}}
           {{ table|safe }}
           {% endfor %}
+        </table>
         
-       
           </body>
       </main>
     </div>

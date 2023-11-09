@@ -1,9 +1,24 @@
-import flask
 from app.csj_scrape import scrape, button_click
 from app.function_test import function_test
-from flask import request
+from flask import request, url_for, Flask
+from flask_table import Table, Col
+from markupsafe import Markup
+import pandas as pd
+import flask
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
+
+
+#'Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'
+
+class SortableTable(Table):
+    allow_sort = True
+    def sort_url(self, col_key, reverse=False):
+        if reverse:
+            direction = 'desc'
+        else:
+            direction = 'asc'
+        return url_for('main', sort=col_key, direction=direction)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -12,12 +27,13 @@ def main():
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
     ads = scrape(button_click())
-    homepage_title = "Civil Service Jobs"
+    homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'
     footer = 'Mckenzie'
     side_title = 'Options'
     return flask.render_template('index.html',  tables=[ads.to_html(classes='data', index=False)], titles=ads.columns.values, title=homepage_title, side_title=side_title, main_content_title=main_content_title, main_content=main_content, footer=footer, var_test=var_test)
+    #return flask.render_template('index.html',  tables=[table.to_html(classes='data', index=False)], titles=ads.columns.values[:1], title=homepage_title, side_title=side_title, main_content_title=main_content_title, main_content=main_content, footer=footer, var_test=var_test)
 
 app.run(debug=True, host='0.0.0.0', port=5000)
 
