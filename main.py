@@ -1,4 +1,4 @@
-from app.csj_scrape import scrape, button_click
+#from app.csj_scrape import scrape, button_click
 from app.function_test import function_test
 from flask import request, url_for, Flask
 from flask_table import Table, Col
