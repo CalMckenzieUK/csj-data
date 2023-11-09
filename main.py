@@ -34,7 +34,7 @@ def main():
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'
-    footer = 'Mckenzie'
+    footer = 'Not Copyright'
     side_title = 'Options'
     return flask.render_template('index.html',  tables=[ads.to_html(classes='data', index=False)], titles=ads.columns.values, title=homepage_title, side_title=side_title, main_content_title=main_content_title, main_content=main_content, footer=footer, var_test=var_test)
     #return flask.render_template('index.html',  tables=[table.to_html(classes='data', index=False)], titles=ads.columns.values[:1], title=homepage_title, side_title=side_title, main_content_title=main_content_title, main_content=main_content, footer=footer, var_test=var_test)
