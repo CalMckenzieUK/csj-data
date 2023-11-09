@@ -5,4 +5,4 @@ flask
 flask_table
 pandas
 markupsafe
-selenium
+selenium == 4.15.2

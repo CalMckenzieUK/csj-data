@@ -53,5 +53,8 @@ def scrape(url):
     df.to_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv', index=False)
     return df
 
-scrape(button_click())
+try: 
+    scrape(button_click())
+except:
+    pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{date.today()}.csv'))
     
