@@ -1,0 +1,8 @@
+requests
+bs4
+datetime
+flask
+flask_table
+pandas
+markupsafe
+selenium
