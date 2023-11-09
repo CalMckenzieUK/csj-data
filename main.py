@@ -5,9 +5,10 @@ from flask_table import Table, Col
 from markupsafe import Markup
 import pandas as pd
 import flask
+from datetime import datetime, date
 
 app = Flask(__name__)
-
+todays_date = date.today()
 
 #'Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'
 
@@ -26,7 +27,10 @@ def main():
     var_test = 'nothing'
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
-    ads = scrape(button_click())
+    try:
+        ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
+    except:    
+        ads = scrape(button_click())
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'

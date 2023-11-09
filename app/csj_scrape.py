@@ -4,6 +4,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
+from datetime import datetime, date
 
 #function that goes to webpage, clicks a button called 'search', and returns the html of the page
 def button_click():
@@ -48,6 +49,9 @@ def scrape(url):
                 pass
     
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'])
+    todays_date = date.today()
+    df.to_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv', index=False)
     return df
+
+scrape(button_click())
     
-# Loop through each job posting and extract details
