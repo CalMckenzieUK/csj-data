@@ -9,7 +9,6 @@ from datetime import datetime, date
 
 app = Flask(__name__)
 todays_date = date.today()
-
 #'Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'
 
 class SortableTable(Table):
@@ -27,14 +26,10 @@ def main():
     var_test = 'nothing'
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
-    try:
-        ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
-    except:    
-        dummy_array = [['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID']]
-        ads = pd.DataFrame(dummy_array, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'])
-
-
-        #ads = scrape(button_click())
+    #try:
+    ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
+    #except:    
+    #    ads = scrape(button_click())
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'
