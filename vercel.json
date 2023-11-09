@@ -1,14 +1,18 @@
 {
+    "functions": {
+          "csj_scrape.py": {
+            "maxDuration": 15
+          },
     "builds":[
         {
-            "src":"src/main.js", 
+            "src":"main.py", 
             "use":"@vercel/python"
         }
     ],
     "routes":[
         {
             "src":"/(.*)", 
-            "dest":"/src/main.py"
+            "dest":"main.py"
         }
     ]
 }
