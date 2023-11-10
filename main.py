@@ -1,4 +1,4 @@
-#from app.csj_scrape import scrape, button_click
+from app.csj_scrape import scrape, button_click
 from app.function_test import function_test
 from flask import request, url_for, Flask
 from flask_table import Table, Col
@@ -26,10 +26,10 @@ def main():
     var_test = 'nothing'
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
-    #try:
-    ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
-    #except:    
-    #    ads = scrape(button_click())
+    try:
+        ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
+    except:    
+        ads = scrape(button_click())
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'

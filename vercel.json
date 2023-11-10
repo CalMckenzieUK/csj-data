@@ -1,9 +1,4 @@
 {
-    "functions": {
-          "csj_scrape.py": {
-            "maxDuration": 15
-          }
-    },
     "builds":[
         {
             "src":"main.py", 
