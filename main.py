@@ -30,6 +30,9 @@ def main():
         ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
     except:    
         ads = scrape(button_click())
+    
+
+
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'

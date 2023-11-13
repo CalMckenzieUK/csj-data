@@ -36,20 +36,25 @@ def scrape(url):
         for posting in job_postings:
             try: 
                 ad = posting.get_text().strip().splitlines()
+                url = posting.find('a')['href']
                 ad = list(filter(None, ad))
-                print(ad)
                 title = ad[0]
                 department = ad[1]
                 location = ad[2]
                 salary = ad[3]
                 closing_date = ad[4]
                 uid = ad[5]
-                job_data.append([title, department, location, salary, closing_date, uid])
+                job_url = str(url)
+                job_data.append([title, department, location, salary, closing_date, uid, job_url])
             except:
                 pass
+        
     
-    df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'])
+    df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
     todays_date = date.today()
     df.to_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv', index=False)
     return df
     
+if __name__ == '__main__':
+    print(scrape(button_click()).head())
+
