@@ -9,7 +9,7 @@ from datetime import datetime, date
 
 app = Flask(__name__)
 todays_date = date.today()
-#'Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'
+
 
 class SortableTable(Table):
     allow_sort = True
