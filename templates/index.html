@@ -24,10 +24,32 @@
         <br>
         <h2>{{main_content_title}}</h2>
         <table class="table" name="vacancy_table" style="border: 3px solid black;">
-          {% for table in tables %}
-          {{titles[loop.index]}}
-          {{ table|safe }}
+          <thead>
+            <tr>
+              <th> Title</th>
+              <th> Department</th> 
+              <th> Location</th>
+              <th> Salary</th>
+              <th> Closing Date</th>
+              <th> UID</th>
+              <th> URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in tables %}
+            <tr>
+              {% for cell in row %}
+              <td>
+                {%if loop.index0 != 6 %}
+                  {{cell}}
+                {% else %}
+                  <a href={{cell}}>Link</a>
+                {% endif %}
+              </td>
+              {% endfor %}
+            </tr>
           {% endfor %}
+          </tbody>
         </table>
         
           </body>
