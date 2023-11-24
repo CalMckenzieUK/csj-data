@@ -5,8 +5,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from datetime import datetime, date
+todays_date = date.today()
 
-#function that goes to webpage, clicks a button called 'search', and returns the html of the page
 def button_click():
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
@@ -17,9 +17,9 @@ def button_click():
     all_results_pages = []
     html = driver.page_source
     all_results_pages.append(html)
-    for i in range(2,3):
+    print(all_results_pages)
+    for i in range(len(all_results_pages)):
         try:
-            print(f'scraping page {i}')
             driver.find_element(By.LINK_TEXT, f'{i}').click()
             all_results_pages.append(driver.page_source)
         except:
@@ -55,24 +55,44 @@ def scrape(url):
     df.to_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv', index=False)
     return df
     
-    def full_ad(df):
-        html = []
-        for i in df['URL']:
-            options = webdriver.ChromeOptions()
-            options.add_argument('--headless')
-            driver = webdriver.Chrome(options=options)
-            driver.get(i)
-            html = driver.page_source
-            driver.quit()
-            
+def full_ad(df):
+    print('starting full_ad function')
+    job_uids = df['UID']
+    job_urls = df['URL']
+    html = []
+    for i in job_urls:
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
-        driver.get(url)
-        html = driver.page_source
+        driver.get(i)
+        driver.page_source
+        html.append(driver.page_source)
         driver.quit()
-        return html
+        print('finished scraping job ', i)
+    page_texts = []
+    counter = 0
+    for page_html in html:
+        soup = BeautifulSoup(page_html, 'html.parser')    
+        relevant_divs = soup.find('div', class_='vac_display_panel_main')
+        page_content = []  
+        for page_div in relevant_divs:    
+            try: 
+                full_text = page_div.get_text().strip().splitlines()
+                page_content.append((job_uids[counter], full_text))
+            except Exception as e:
+                pass     
+        counter += 1
+        page_texts.append(page_content)
+    page_texts_dict = {}
+    for i in page_texts:
+        print(i[0][0])
+        page_texts_dict[i[0][0]] = i[0][1]
+        
+    page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
+    page_texts_df.to_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv', index=False)
+            
+    return page_texts
 
 if __name__ == '__main__':
-    print(scrape(button_click()).head())
+    full_ad(scrape(button_click()))
 
