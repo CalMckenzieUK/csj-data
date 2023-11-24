@@ -55,6 +55,24 @@ def scrape(url):
     df.to_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv', index=False)
     return df
     
+    def full_ad(df):
+        html = []
+        for i in df['URL']:
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')
+            driver = webdriver.Chrome(options=options)
+            driver.get(i)
+            html = driver.page_source
+            driver.quit()
+            
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        driver = webdriver.Chrome(options=options)
+        driver.get(url)
+        html = driver.page_source
+        driver.quit()
+        return html
+
 if __name__ == '__main__':
     print(scrape(button_click()).head())
 
