@@ -7,6 +7,7 @@ import pandas as pd
 import flask
 from datetime import datetime, date
 
+
 app = Flask(__name__)
 todays_date = date.today()
 
@@ -19,6 +20,7 @@ class SortableTable(Table):
         else:
             direction = 'asc'
         return url_for('main', sort=col_key, direction=direction)
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -36,7 +38,7 @@ def main():
     main_content = 'main content'
     footer = 'Not Copyright'
     side_title = 'Options'
-    return flask.render_template('index.html',  tables=ads.values, titles=ads.columns.values, title=homepage_title, side_title=side_title, main_content_title=main_content_title, main_content=main_content, footer=footer, var_test=var_test)
+    return flask.render_template('index.html', tables=ads.values, titles=ads.columns.values, title=homepage_title, side_title=side_title, main_content_title=main_content_title, main_content=main_content, footer=footer, var_test=var_test)
 
 app.run(debug=True, host='0.0.0.0', port=5000)
 

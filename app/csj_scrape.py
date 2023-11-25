@@ -93,6 +93,5 @@ def full_ad(df):
             
     return page_texts
 
-if __name__ == '__main__':
-    full_ad(scrape(button_click()))
+
 
