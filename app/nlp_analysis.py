@@ -9,37 +9,41 @@ def application_process(df):
     application_process_dict = {}
 
     for i in range(len(df['Full Text'])):
-        cv = {'CV':False}
-        personal_statement = {'Personal Statement':False}
-        references = {'References':False}
-        application_form = {'Application Form':False}
-        cover_letter = {'Cover Letter':False}
-        presentation = {'Presentation':False}
-        interview = {'Interview':False}
-        portfolio = {'Portfolio':False}
-        test = {'Test':False}
+        cv = {'CV':'False'}
+        personal_statement = {'Personal Statement':'False'}
+        references = {'References':'False'}
+        application_form = {'Application Form':'False'}
+        cover_letter = {'Cover Letter':'False'}
+        presentation = {'Presentation':'False'}
+        interview = {'Interview':'False'}
+        portfolio = {'Portfolio':'False'}
+        test = {'Test':'False'}
 
         if 'CV' in texts[i]:
-            cv['CV'] = True
+            cv['CV'] = 'True'
         if 'Personal Statement' in texts[i]:
-            personal_statement['Personal Statement'] = True
+            personal_statement['Personal Statement'] = 'True'
         if 'References' in texts[i]:
-            references['References'] = True
+            references['References'] = 'True'
         if 'Application Form' in texts[i]:
-            application_form['Application Form'] = True
+            application_form['Application Form'] = 'True'
         if 'Cover Letter' in texts[i]:
-            cover_letter['Cover Letter'] = True
+            cover_letter['Cover Letter'] = 'True'
         if 'Presentation' in texts[i]:
-            presentation['Presentation'] = True
+            presentation['Presentation'] = 'True'
         if 'Interview' in texts[i]:
-            interview['Interview'] = True
+            interview['Interview'] = 'True'
         if 'Portfolio' in texts[i]:
-            portfolio['Portfolio'] = True
+            portfolio['Portfolio'] = 'True'
         if 'Test' in texts[i]:
-            test['Test'] = True
+            test['Test'] = 'True'
 
         application_process_dict[uids[i]] = [cv, personal_statement, references, application_form, cover_letter, presentation, interview, portfolio, test]
-
+    output_array = []
+    for key, values in application_process_dict.items():
+        output_array.append([key, values])
+    with open(f'/workspaces/flask_app/data/dicts/application_process_dict-{todays_date}.txt', 'w') as f:
+        f.write(str(output_array))
     return application_process_dict
 
 def apply_at_advertisers_site(df):
@@ -54,6 +58,11 @@ def apply_at_advertisers_site(df):
             apply_at_advertisers_sites["Apply at advertiser's site"] = True
 
         apply_at_advertisers_sites_dict[uids[i]] = [apply_at_advertisers_sites]
+    output_array = []
+    for key, values in apply_at_advertisers_sites_dict.items():
+        output_array.append([key, values])
+    with open(f'/workspaces/flask_app/data/dicts/apply_at_advertisers_site-{todays_date}.txt', 'w') as f:
+        f.write(str(output_array))
 
     return apply_at_advertisers_sites_dict
 
@@ -66,18 +75,25 @@ def civil_service_behaviours(df):
         temp_dict = {}
         for behaviour in civil_service_behaviours_dict:
             if behaviour in texts[i]:
-                temp_dict[behaviour] = True
+                temp_dict[behaviour] = 'True'
             else:
-                temp_dict[behaviour] = False
+                temp_dict[behaviour] = 'False'
         csb_dict[uids[i]] = temp_dict
-    
+    output_array = []
+    for key, values in csb_dict.items():
+        output_array.append([key, values])
+    with open(f'/workspaces/flask_app/data/dicts/csb-{todays_date}.txt', 'w') as f:
+        f.write(str(output_array))
     return csb_dict
 
 if __name__ == "__main__":
     try:
         df = pd.read_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv')
-        print(application_process(df))
-        print(apply_at_advertisers_site(df))
-        print(civil_service_behaviours(df))
+        application_process(df)
+        apply_at_advertisers_site(df)
+        civil_service_behaviours(df)
     except:
-        print('No file found')
+        df = pd.read_csv(f'/workspaces/flask_app/data/full_ad_text-2023-11-24.csv')
+        application_process(df)
+        apply_at_advertisers_site(df)
+        civil_service_behaviours(df)
