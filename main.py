@@ -1,4 +1,4 @@
-from app.csj_scrape import scrape, button_click
+from app.csj_scrape import scrape, button_click, full_ad
 from app.function_test import function_test
 from flask import request, url_for, Flask
 from flask_table import Table, Col
@@ -32,6 +32,7 @@ def main():
         ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
     except:    
         ads = scrape(button_click())
+        full_text = full_ad(ads)
     # ads['html_URL'] = ads['URL'].apply(lambda x: '<a href="{}">link</a>'.format(x))
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'

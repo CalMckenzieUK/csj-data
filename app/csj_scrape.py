@@ -90,8 +90,9 @@ def full_ad(df):
         
     page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
     page_texts_df.to_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv', index=False)
-            
+    with open(f'/workspaces/flask_app/data/dicts/full_ad_text-{todays_date}.txt', 'w') as f:
+        f.write(str(page_texts))        
     return page_texts
-
+full_ad(scrape(button_click()))
 
 

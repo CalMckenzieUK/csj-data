@@ -26,7 +26,11 @@ with open(f'/workspaces/flask_app/data/dicts/apply_at_advertisers_site-{todays_d
 
 with open(f'/workspaces/flask_app/data/dicts/csb-{todays_date}.txt', 'r') as f:
     csb_dict = eval(f.read())
+
+with open(f'/workspaces/flask_app/data/dicts/full_ad_text-{todays_date}.txt', 'r') as f:
+    full_ad_text = eval(f.read())
     
-dict_to_df(csb_dict, 'cs_behaviours')
-dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site')
-dict_to_df(application_process_dict, 'application_process')
+# dict_to_df(csb_dict, 'cs_behaviours')
+# dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site')
+# dict_to_df(application_process_dict, 'application_process')
+dict_to_df(full_ad_text, 'full_ad_text')
