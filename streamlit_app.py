@@ -1,7 +1,8 @@
 import streamlit as st 
 import pandas as pd
 
-st.write(''' \n # first line
+st.write(''' # first line
          # second line
-         *third line*\n ''')
+         *third line* 
+         # fourth line''')
 
