@@ -25,7 +25,6 @@ def button_click():
         except:
             break
     driver.quit()
-    print(len(all_results_pages))
     return all_results_pages
 
 def scrape(url):

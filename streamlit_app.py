@@ -1,6 +1,7 @@
 import streamlit as st 
 import pandas as pd
 from datetime import datetime
+from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 todays_date = datetime.now().date()
 
 try: df = pd.read_csv(f'data/cleaned_data-{todays_date}.csv')
@@ -38,6 +39,29 @@ if len(all_text_input)> 0:
         phrase_line = f'''There are {job_titles_containing_data} which contain the word "{all_text_input}"'''
 else:
      phrase_line = ''
+
+gb = GridOptionsBuilder.from_dataframe(df)
+gb.configure_column("URL",
+                    headerName="URL",
+                    cellRenderer=JsCode(
+                        """
+                        class UrlCellRenderer {
+                                init(params) {
+                                this.eGui = document.createElement('a');
+                                this.eGui.innerText = 'Link';
+                                this.eGui.setAttribute('href', params.value);
+                                this.eGui.setAttribute('style', "text-decoration:none");
+                                this.eGui.setAttribute('target', "_blank");
+                                        }
+                                getGui() {
+                                return this.eGui;
+                                        }
+                                }       
+                        """))
+gb.configure_default_column(min_column_width=235)
+gridOptions = gb.build()
+
+
 st.write(f''' \n Some headline stats from the data: 
         
         Number of vacancies: {number_of_vacancies} 
@@ -45,7 +69,7 @@ st.write(f''' \n Some headline stats from the data:
         A range of {job_titles} job titles
         {phrase_line}         
          ''')
+AgGrid(df, gridOptions=gridOptions, height=500, allow_unsafe_jscode=True, allow_unsafe_html=True, width='100%')
 
-
-st.dataframe(df, use_container_width=True)
+# st.dataframe(df, width=10000, height=600, hide_index=True ) 
 

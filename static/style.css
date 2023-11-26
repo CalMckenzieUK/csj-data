@@ -6,6 +6,7 @@ body {
     
 }.container {
     display: grid;
+    height: auto;
   }
 
 header {
@@ -20,37 +21,15 @@ header {
   }
   main {
     overflow-y: auto;
-    border-top-left-radius: 5rem;
-    border-bottom-left-radius: 5rem;
-    top: 15%;
-    left: 5%;
-    background-color: rgb(233, 233, 233);
-    width: 70%;
-    height: max 150%;
-    position: absolute;
-    padding-top: 2rem;
-    padding-left: 5rem;
-    padding-right: 5rem;
-    padding-bottom: 5rem;
-    bottom: 10%;
-  }
-  sidebar {
-    border-top-right-radius: 10%;
-    border-bottom-right-radius: 10%;
-    text-wrap: wrap;
-    color: white;
-    font: 1rem Helvetica, sans-serif;
-    background-color: royalblue;    
-    /* padding-left: 95rem; */
-    top: 15%;
-    padding-top: 1rem;
+    border-radius: 15px;
+    background-color: rgb(235, 235, 235);
+    top: 65px;
+    position: relative;
+    margin-top: 2.5rem;
     padding-left: 1rem;
-    padding-bottom: 3rem;
-    position: absolute;
-    right: 2.5%;
-    width: 10%;
-    height: max 80%;
-    ;
+    padding-right: 1rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
   }
   footer {
     background-color: #eee;
@@ -62,7 +41,7 @@ header {
     height: 2rem;
     opacity: 0.5;
   }
-  table {
+  /* table {
     border-collapse: collapse;
     width: 100%;
     color: #333;
@@ -70,5 +49,5 @@ header {
     text-align: left;
     border-spacing: 1px;
     background-color: aliceblue;
-  }
+  } */
  

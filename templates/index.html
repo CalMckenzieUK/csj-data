@@ -11,17 +11,13 @@
 
     <header>
       <h1>{{title}}</h1>
-      <iframe
-        src="https://flaskapp-jqysonhqmtestfybdtduew.streamlit.app/?embed=true"
-        height="450"
-        style="width:100%;border:none;"
-  ></iframe>
+      
     </header>
-    <div class="container">
+    <!-- <div class="container">
       <main>
          <body> 
         <p>{{var_test}}</p>
-        <!-- button that runs function_test -->
+        
         <form action="{{ url_for('main') }}" method="post">
           User text? <input type="text" name="user_text"><br>
           <input type="submit" value="Submit">
@@ -59,8 +55,18 @@
         
           </body>
       </main>
-    </div>
-    <div class="sidebar">
+    </div> -->
+
+    
+      <main>
+        
+        <iframe
+        src="https://flaskapp-2rznckhlcwpbvjfccadp9r.streamlit.app/?embed=true"
+        style="width:100%;border:none;height:750px;"
+        ></iframe>
+      </main>
+    
+    <!-- <div class="sidebar">
       <sidebar>
         <body>
         <h3>{{side_title}}</h3>
@@ -72,7 +78,7 @@
           <li>Link 3</li>
         </ul>
         </body>
-      </sidebar>  
+      </sidebar>   -->
     </div>
     <footer>
       <p>&copy; {{footer}}</p>
