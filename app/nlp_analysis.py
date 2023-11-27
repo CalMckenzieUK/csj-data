@@ -6,6 +6,7 @@ todays_date = datetime.now().date()
 def application_process(df):
     uids = df['UID'].str.extract('(\d+)', expand=False).astype(int)
     texts = df['Full Text']
+    
     application_process_dict = {}
 
     for i in range(len(df['Full Text'])):

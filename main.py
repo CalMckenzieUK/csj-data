@@ -1,4 +1,7 @@
 from app.csj_scrape import scrape, button_click, full_ad
+from app.data_cleaning import cleaning
+from app.dict_to_df import dict_to_df, dict_to_def_setup_and_execution
+from app.nlp_analysis import application_process, apply_at_advertisers_site, civil_service_behaviours
 from app.function_test import function_test
 from flask import request, url_for, Flask
 from flask_table import Table, Col
@@ -9,7 +12,7 @@ from datetime import datetime, date
 
 
 app = Flask(__name__)
-todays_date = date.today()
+todays_date = datetime.now().date() 
 
 
 class SortableTable(Table):
@@ -30,9 +33,15 @@ def main():
         var_test = function_test(request.form['user_text'])
     try:
         ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
+        full_text = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv'))
     except:    
         ads = scrape(button_click())
         full_text = full_ad(ads)
+    application_process(full_text)
+    apply_at_advertisers_site(full_text)
+    civil_service_behaviours(full_text)
+    dict_to_def_setup_and_execution()
+    
     # ads['html_URL'] = ads['URL'].apply(lambda x: '<a href="{}">link</a>'.format(x))
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'

@@ -8,6 +8,7 @@ from datetime import datetime, date
 todays_date = date.today()
 
 def button_click():
+    print('starting button_click')
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     driver = webdriver.Chrome(options=options)
@@ -17,7 +18,6 @@ def button_click():
     all_results_pages = []
     html = driver.page_source
     all_results_pages.append(html)
-    print(all_results_pages)
     for i in range(len(all_results_pages)):
         try:
             driver.find_element(By.LINK_TEXT, f'{i}').click()
@@ -25,9 +25,11 @@ def button_click():
         except:
             break
     driver.quit()
+    print('finished button_click')
     return all_results_pages
 
 def scrape(url):
+    print('starting scrape')
     job_data = []
     for i in url:
         soup = BeautifulSoup(i, 'html.parser')
@@ -52,10 +54,11 @@ def scrape(url):
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
     todays_date = date.today()
     df.to_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv', index=False)
+    print('finished scrape')
     return df
     
 def full_ad(df):
-    print('starting full_ad function')
+    print('starting full_ad')
     job_uids = df['UID']
     job_urls = df['URL']
     html = []
@@ -67,7 +70,7 @@ def full_ad(df):
         driver.page_source
         html.append(driver.page_source)
         driver.quit()
-        print('finished scraping job ', i)
+    
     page_texts = []
     counter = 0
     for page_html in html:
@@ -84,14 +87,15 @@ def full_ad(df):
         page_texts.append(page_content)
     page_texts_dict = {}
     for i in page_texts:
-        print(i[0][0])
         page_texts_dict[i[0][0]] = i[0][1]
-        
     page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
     page_texts_df.to_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv', index=False)
     with open(f'/workspaces/flask_app/data/dicts/full_ad_text-{todays_date}.txt', 'w') as f:
-        f.write(str(page_texts))        
-    return page_texts
-full_ad(scrape(button_click()))
+        f.write(str(page_texts_dict))   
+    print('finished full_ad')     
+    return page_texts_dict
+
+if __name__ == "__main__":
+    full_ad(scrape(button_click()))
 
 
