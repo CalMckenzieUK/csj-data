@@ -22,6 +22,8 @@ st.sidebar.subheader('All text in ad')
 all_text_input = st.sidebar.text_input('Search all text in ad for a keyword').lower()
 st.sidebar.subheader('Location')
 location_input = st.sidebar.text_input('Search for a location').lower()
+st.sidebar.subheader('Salary range slider')
+salary_range = st.sidebar.slider('Salary range', 0, 100000, (0, 100000))
 
 if st.sidebar.button('Clear Filters'):
     job_title_input = ''

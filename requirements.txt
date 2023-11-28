@@ -6,3 +6,4 @@ flask_table
 pandas
 markupsafe
 selenium == 4.15.2
+streamlit_aggrid
