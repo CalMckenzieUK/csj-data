@@ -42,6 +42,7 @@ def main():
     civil_service_behaviours(full_text)
     dict_to_def_setup_and_execution()
     
+    
     # ads['html_URL'] = ads['URL'].apply(lambda x: '<a href="{}">link</a>'.format(x))
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'

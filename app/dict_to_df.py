@@ -46,9 +46,9 @@ def dict_to_def_setup_and_execution():
     with open(f'/workspaces/flask_app/data/dicts/full_ad_text-{todays_date}.txt', 'r') as f:
         full_ad_text = eval(f.read())
 
-    # dict_to_df(csb_dict, 'cs_behaviours')
-    # dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site')
-    # dict_to_df(application_process_dict, 'application_process')
+    dict_to_df(csb_dict, 'cs_behaviours')
+    dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site')
+    dict_to_df(application_process_dict, 'application_process')
     dict_to_df_full_text(full_ad_text, 'full_ad_text')
 
 if __name__ == '__main__':

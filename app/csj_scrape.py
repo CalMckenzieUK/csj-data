@@ -93,7 +93,7 @@ def full_ad(df):
     with open(f'/workspaces/flask_app/data/dicts/full_ad_text-{todays_date}.txt', 'w') as f:
         f.write(str(page_texts_dict))   
     print('finished full_ad')     
-    return page_texts_dict
+    return page_texts_df
 
 if __name__ == "__main__":
     full_ad(scrape(button_click()))

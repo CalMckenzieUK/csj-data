@@ -2,16 +2,23 @@ import pandas as pd
 from datetime import datetime
 todays_date = datetime.now().date()
 
+print(todays_date)
+
 def cleaning():
     try: 
-        df  = pd.DataFrame(pd.read_csv(f'data/data{todays_date}.csv'), index=False)
+        df  = pd.DataFrame(pd.read_csv(f'data/data-{todays_date}.csv'), index=False)
     except: 
+        print('used old file in cleaning 1')
         df = pd.DataFrame(pd.read_csv(f'data/data-2023-11-25.csv'))
 
     try:
         df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-{todays_date}.csv'))
     except:
+        print('used old file in cleaning 2')
         df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-2023-11-26.csv'))
+    print(df['UID'])
+    print(df_full_ad['UID'])
+
     df = pd.merge(df, df_full_ad, on='UID', how='left')
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
     df['Salary'] = df['Salary'].str.extract(r'(\d{2,3},\d{3})')
