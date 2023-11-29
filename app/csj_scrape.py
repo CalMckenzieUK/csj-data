@@ -25,8 +25,6 @@ def button_click():
         try:
             #find next button called 'Go to next results page' and click on it
             driver.find_element(By.PARTIAL_LINK_TEXT, 'next').click()
-
-            
             all_results_pages.append(driver.page_source)
             print('clicked next page')
         except:
@@ -80,12 +78,9 @@ def full_ad(df):
         html.append(driver.page_source)
         driver.quit()
 
-    #writes the results in and out of a file as a lazy checkpoint in case of failure
-    with open(f'/workspaces/flask_app/data/html-{todays_date}.txt', 'w') as f:
-        f.write(str(html))
-    html = []
+    #read from text file
     with open(f'/workspaces/flask_app/data/html-{todays_date}.txt', 'r') as f:
-        html = f.read()
+        html = eval(f.read())
     page_texts = []
     counter = 0
     for page_html in html:
