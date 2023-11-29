@@ -43,7 +43,5 @@ def main():
     side_title = 'Options'
     return flask.render_template('index.html', tables=ads.values, titles=ads.columns.values, title=homepage_title, side_title=side_title, main_content_title=main_content_title, main_content=main_content, footer=footer, var_test=var_test)
 
-app.run(debug=True, host='0.0.0.0', port=5000)
-
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
