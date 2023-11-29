@@ -43,7 +43,7 @@ def application_process(df):
     output_array = []
     for key, values in application_process_dict.items():
         output_array.append([key, values])
-    with open(f'/workspaces/flask_app/data/dicts/application_process_dict-{todays_date}.txt', 'w') as f:
+    with open(f'data/dicts/application_process_dict-{todays_date}.txt', 'w') as f:
         f.write(str(output_array))
     return application_process_dict
 
@@ -62,7 +62,7 @@ def apply_at_advertisers_site(df):
     output_array = []
     for key, values in apply_at_advertisers_sites_dict.items():
         output_array.append([key, values])
-    with open(f'/workspaces/flask_app/data/dicts/apply_at_advertisers_site-{todays_date}.txt', 'w') as f:
+    with open(f'data/dicts/apply_at_advertisers_site-{todays_date}.txt', 'w') as f:
         f.write(str(output_array))
 
     return apply_at_advertisers_sites_dict
@@ -83,18 +83,18 @@ def civil_service_behaviours(df):
     output_array = []
     for key, values in csb_dict.items():
         output_array.append([key, values])
-    with open(f'/workspaces/flask_app/data/dicts/csb-{todays_date}.txt', 'w') as f:
+    with open(f'data/dicts/csb-{todays_date}.txt', 'w') as f:
         f.write(str(output_array))
     return csb_dict
 
 if __name__ == "__main__":
     try:
-        df = pd.read_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv')
+        df = pd.read_csv(f'data/full_ad_text-{todays_date}.csv')
         application_process(df)
         apply_at_advertisers_site(df)
         civil_service_behaviours(df)
     except:
-        df = pd.read_csv(f'/workspaces/flask_app/data/full_ad_text-2023-11-24.csv')
+        df = pd.read_csv(f'data/full_ad_text-2023-11-24.csv')
         application_process(df)
         apply_at_advertisers_site(df)
         civil_service_behaviours(df)

@@ -24,8 +24,8 @@ def main():
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
     try:
-        ads = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv'))
-        full_text = pd.DataFrame(pd.read_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv'))
+        ads = pd.DataFrame(pd.read_csv(f'data/data-{todays_date}.csv'))
+        full_text = pd.DataFrame(pd.read_csv(f'data/full_ad_text-{todays_date}.csv'))
     except:    
         ads = scrape(button_click())
         full_text = full_ad(ads)

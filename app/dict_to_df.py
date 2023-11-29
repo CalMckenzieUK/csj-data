@@ -18,7 +18,7 @@ def dict_to_df(input, dict_name):
            data.append(temp_dict)
     df = pd.DataFrame(data, index=uids)
     df.index.name = 'UID'
-    df.to_csv(f'/workspaces/flask_app/data/{dict_name}-{todays_date}.csv')
+    df.to_csv(f'data/{dict_name}-{todays_date}.csv')
 
 def dict_to_df_full_text(input, dict_name):
     uids = []
@@ -30,20 +30,20 @@ def dict_to_df_full_text(input, dict_name):
     data.append(temp_dict)
     df = pd.DataFrame(data, index=uids)
     df.index.name = 'UID'
-    df.to_csv(f'/workspaces/flask_app/data/{dict_name}-{todays_date}.csv')
+    df.to_csv(f'data/{dict_name}-{todays_date}.csv')
 
 def dict_to_def_setup_and_execution():
 
-    with open(f'/workspaces/flask_app/data/dicts/application_process_dict-{todays_date}.txt', 'r') as f:
+    with open(f'data/dicts/application_process_dict-{todays_date}.txt', 'r') as f:
         application_process_dict = eval(f.read())
 
-    with open(f'/workspaces/flask_app/data/dicts/apply_at_advertisers_site-{todays_date}.txt', 'r') as f:
+    with open(f'data/dicts/apply_at_advertisers_site-{todays_date}.txt', 'r') as f:
         apply_at_advertisers_sites_dict = eval(f.read())
 
-    with open(f'/workspaces/flask_app/data/dicts/csb-{todays_date}.txt', 'r') as f:
+    with open(f'data/dicts/csb-{todays_date}.txt', 'r') as f:
         csb_dict = eval(f.read())
 
-    with open(f'/workspaces/flask_app/data/dicts/full_ad_text-{todays_date}.txt', 'r') as f:
+    with open(f'data/dicts/full_ad_text-{todays_date}.txt', 'r') as f:
         full_ad_text = eval(f.read())
 
     dict_to_df(csb_dict, 'cs_behaviours')

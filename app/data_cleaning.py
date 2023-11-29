@@ -30,7 +30,7 @@ def cleaning():
 
 
     try: csb_df = pd.read_csv(f'data/cs_behaviours-{todays_date}.csv')
-    except: csb_df = pd.read_csv(f'/data/cs_behaviours-2023-11-26.csv')
+    except: csb_df = pd.read_csv(f'data/cs_behaviours-2023-11-26.csv')
     try: apply_at_advertisers_df = pd.read_csv(f'data/apply_at_advertisers_site-{todays_date}.csv')
     except: apply_at_advertisers_df = pd.read_csv(f'data/apply_at_advertisers_site-2023-11-26.csv') 
     try: application_process_df = pd.read_csv(f'data/application_process-{todays_date}.csv')

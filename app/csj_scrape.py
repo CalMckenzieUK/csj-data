@@ -59,7 +59,7 @@ def scrape(url):
     
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
     todays_date = date.today()
-    df.to_csv(f'/workspaces/flask_app/data/data-{todays_date}.csv', index=False)
+    df.to_csv(f'data/data-{todays_date}.csv', index=False)
     print('finished scrape')
     return df
     
@@ -97,8 +97,8 @@ def full_ad(df):
     for i in page_texts:
         page_texts_dict[i[0][0]] = i[0][1]
     page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
-    page_texts_df.to_csv(f'/workspaces/flask_app/data/full_ad_text-{todays_date}.csv', index=False)
-    with open(f'/workspaces/flask_app/data/dicts/full_ad_text-{todays_date}.txt', 'w') as f:
+    page_texts_df.to_csv(f'data/full_ad_text-{todays_date}.csv', index=False)
+    with open(f'data/dicts/full_ad_text-{todays_date}.txt', 'w') as f:
         f.write(str(page_texts_dict))   
     print('finished full_ad')     
     return page_texts_df
