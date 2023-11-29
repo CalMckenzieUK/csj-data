@@ -3,9 +3,8 @@ from app.data_cleaning import cleaning
 from app.dict_to_df import dict_to_df, dict_to_def_setup_and_execution
 from app.nlp_analysis import application_process, apply_at_advertisers_site, civil_service_behaviours
 from app.function_test import function_test
-from flask import request, url_for, Flask
-from flask_table import Table, Col
 from markupsafe import Markup
+from flask import request, url_for, Flask
 import pandas as pd
 import flask
 from datetime import datetime, date
