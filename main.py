@@ -36,7 +36,7 @@ def main():
     
     
 
-    homepage_title = "Civil Service Jobs Helper"
+    homepage_title = "CS Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'
     footer = 'Not Copyright'
