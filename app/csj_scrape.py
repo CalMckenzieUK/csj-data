@@ -18,12 +18,20 @@ def button_click():
     all_results_pages = []
     html = driver.page_source
     all_results_pages.append(html)
-    for i in range(len(all_results_pages)):
+    #all_results_pages is the first page of results
+    #the below loop should click the next button until it can't find it anymore
+    more_pages = True
+    while more_pages:
         try:
-            driver.find_element(By.LINK_TEXT, f'{i}').click()
+            #find next button called 'Go to next results page' and click on it
+            driver.find_element(By.PARTIAL_LINK_TEXT, 'next').click()
+
+            
             all_results_pages.append(driver.page_source)
+            print('clicked next page')
         except:
-            break
+            print('no more pages')
+            more_pages = False
     driver.quit()
     print('finished button_click')
     return all_results_pages
@@ -63,6 +71,7 @@ def full_ad(df):
     job_urls = df['URL']
     html = []
     for i in job_urls:
+        print('now scraping: ', i)
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         driver = webdriver.Chrome(options=options)
@@ -70,7 +79,13 @@ def full_ad(df):
         driver.page_source
         html.append(driver.page_source)
         driver.quit()
-    
+
+    #writes the results in and out of a file as a lazy checkpoint in case of failure
+    with open(f'/workspaces/flask_app/data/html-{todays_date}.txt', 'w') as f:
+        f.write(str(html))
+    html = []
+    with open(f'/workspaces/flask_app/data/html-{todays_date}.txt', 'r') as f:
+        html = f.read()
     page_texts = []
     counter = 0
     for page_html in html:
@@ -85,6 +100,7 @@ def full_ad(df):
                 pass     
         counter += 1
         page_texts.append(page_content)
+        print('now parsing page :',counter)
     page_texts_dict = {}
     for i in page_texts:
         page_texts_dict[i[0][0]] = i[0][1]
