@@ -14,14 +14,6 @@ app = Flask(__name__)
 todays_date = datetime.now().date() 
 
 
-class SortableTable(Table):
-    allow_sort = True
-    def sort_url(self, col_key, reverse=False):
-        if reverse:
-            direction = 'desc'
-        else:
-            direction = 'asc'
-        return url_for('main', sort=col_key, direction=direction)
 
 
 
@@ -42,7 +34,7 @@ def main():
     dict_to_def_setup_and_execution()
     
     
-    # ads['html_URL'] = ads['URL'].apply(lambda x: '<a href="{}">link</a>'.format(x))
+
     homepage_title = "Civil Service Jobs Helper"
     main_content_title = 'Current vacancies'
     main_content = 'main content'
