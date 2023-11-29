@@ -8,6 +8,7 @@ from flask import request, url_for, Flask
 import pandas as pd
 import flask
 from datetime import datetime, date
+import os
 
 
 app = Flask(__name__)
@@ -45,4 +46,4 @@ def main():
 app.run(debug=True, host='0.0.0.0', port=5000)
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True, port=os.getenv("PORT", default=5000))
