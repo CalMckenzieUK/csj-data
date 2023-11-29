@@ -6,7 +6,7 @@ print(todays_date)
 
 def cleaning():
     try: 
-        df  = pd.DataFrame(pd.read_csv(f'data/data-{todays_date}.csv'), index=False)
+        df  = pd.DataFrame(pd.read_csv(f'data/data-{todays_date}.csv'))
     except: 
         print('used old file in cleaning 1')
         df = pd.DataFrame(pd.read_csv(f'data/data-2023-11-25.csv'))
@@ -16,14 +16,16 @@ def cleaning():
     except:
         print('used old file in cleaning 2')
         df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-2023-11-26.csv'))
-    print(df['UID'])
-    print(df_full_ad['UID'])
+    print(df['Closing Date'])
 
     df = pd.merge(df, df_full_ad, on='UID', how='left')
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
     df['Salary'] = df['Salary'].str.extract(r'(\d{2,3},\d{3})')
-    #set closing date as last 18 chars of closing date
-    df['Closing Date'] = pd.to_datetime(df['Closing Date'].str[-18:])
+    #split closing date by spaces and take the last 3 items in the list
+    df['Closing Date'] = df['Closing Date'].str.split().str[-3:].str.join(' ').str.replace('th', '').str.replace('rd', '').str.replace('nd', '').str.replace('st', '')
+
+    print(df['Closing Date'])
+    df['Closing Date'] = pd.to_datetime(df['Closing Date'], format='%d %B %Y')
     df.to_csv(f'data/cleaned_data-{todays_date}.csv', index=False)
 
 

@@ -11,7 +11,6 @@ st.set_page_config(layout="wide")
 
 
 df['Full Text'] = df['Full Text'].astype(str)
-print(df.dtypes)
 # job_title_input = st.text_input('Search for a job title').lower()
 st.sidebar.title('Filters')
 st.sidebar.subheader('Job Title')

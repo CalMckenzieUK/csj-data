@@ -68,6 +68,8 @@ def full_ad(df):
     job_uids = df['UID']
     job_urls = df['URL']
     html = []
+    page_texts = []
+    counter = 0
     for i in job_urls:
         print('now scraping: ', i)
         options = webdriver.ChromeOptions()
@@ -77,25 +79,20 @@ def full_ad(df):
         driver.page_source
         html.append(driver.page_source)
         driver.quit()
-
-    #read from text file
-    with open(f'/workspaces/flask_app/data/html-{todays_date}.txt', 'r') as f:
-        html = eval(f.read())
-    page_texts = []
-    counter = 0
-    for page_html in html:
-        soup = BeautifulSoup(page_html, 'html.parser')    
-        relevant_divs = soup.find('div', class_='vac_display_panel_main')
-        page_content = []  
-        for page_div in relevant_divs:    
-            try: 
-                full_text = page_div.get_text().strip().splitlines()
-                page_content.append((job_uids[counter], full_text))
-            except Exception as e:
-                pass     
-        counter += 1
-        page_texts.append(page_content)
-        print('now parsing page :',counter)
+        for page_html in html:
+            soup = BeautifulSoup(page_html, 'html.parser')    
+            relevant_divs = soup.find('div', class_='vac_display_panel_main')
+            page_content = []  
+            for page_div in relevant_divs:    
+                try: 
+                    full_text = page_div.get_text().strip().splitlines()
+                    page_content.append((job_uids[counter], full_text))
+                except Exception as e:
+                    pass     
+            page_texts.append(page_content)
+            counter += 1
+            print('now parsing page :',counter)
+        html = []
     page_texts_dict = {}
     for i in page_texts:
         page_texts_dict[i[0][0]] = i[0][1]
