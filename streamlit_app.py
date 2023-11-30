@@ -5,7 +5,7 @@ from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 todays_date = datetime.now().date()
 
 try: df = pd.read_csv(f'data/cleaned_data-{todays_date}.csv')
-except: df = pd.read_csv(f'data/cleaned_data-2023-11-26.csv')
+except: df = pd.read_csv(f'data/cleaned_data-2023-11-29.csv')
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
 #basic metrics from dataframe

@@ -94,7 +94,7 @@ if __name__ == "__main__":
         apply_at_advertisers_site(df)
         civil_service_behaviours(df)
     except:
-        df = pd.read_csv(f'data/full_ad_text-2023-11-24.csv')
+        df = pd.read_csv(f'data/full_ad_text-2023-11-29.csv')
         application_process(df)
         apply_at_advertisers_site(df)
         civil_service_behaviours(df)
