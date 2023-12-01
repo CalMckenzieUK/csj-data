@@ -28,26 +28,18 @@ def cleaning():
     try: 
         df  = pd.DataFrame(pd.read_csv(f'data/data-{todays_date}.csv'))
     except: 
-<<<<<<< HEAD
         
-        df = pd.DataFrame(pd.read_csv(f'data/data-2023-11-25.csv'))
-=======
+        
         print('used old file in cleaning 1')
         df = pd.DataFrame(pd.read_csv(f'data/data-2023-11-29.csv'))
->>>>>>> main
 
     try:
         df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-{todays_date}.csv'))
     except:
-<<<<<<< HEAD
-        
-        df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-2023-11-26.csv'))
-    
-=======
+            
         print('used old file in cleaning 2')
         df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-2023-11-29.csv'))
     print(df['Closing Date'])
->>>>>>> main
 
     df = pd.merge(df, df_full_ad, on='UID', how='left')
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
