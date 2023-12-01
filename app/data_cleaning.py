@@ -28,15 +28,26 @@ def cleaning():
     try: 
         df  = pd.DataFrame(pd.read_csv(f'data/data-{todays_date}.csv'))
     except: 
+<<<<<<< HEAD
         
         df = pd.DataFrame(pd.read_csv(f'data/data-2023-11-25.csv'))
+=======
+        print('used old file in cleaning 1')
+        df = pd.DataFrame(pd.read_csv(f'data/data-2023-11-29.csv'))
+>>>>>>> main
 
     try:
         df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-{todays_date}.csv'))
     except:
+<<<<<<< HEAD
         
         df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-2023-11-26.csv'))
     
+=======
+        print('used old file in cleaning 2')
+        df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-2023-11-29.csv'))
+    print(df['Closing Date'])
+>>>>>>> main
 
     df = pd.merge(df, df_full_ad, on='UID', how='left')
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
@@ -50,11 +61,11 @@ def cleaning():
 
 
     try: csb_df = pd.read_csv(f'data/cs_behaviours-{todays_date}.csv')
-    except: csb_df = pd.read_csv(f'data/cs_behaviours-2023-11-26.csv')
+    except: csb_df = pd.read_csv(f'data/cs_behaviours-2023-11-29.csv')
     try: apply_at_advertisers_df = pd.read_csv(f'data/apply_at_advertisers_site-{todays_date}.csv')
-    except: apply_at_advertisers_df = pd.read_csv(f'data/apply_at_advertisers_site-2023-11-26.csv') 
+    except: apply_at_advertisers_df = pd.read_csv(f'data/apply_at_advertisers_site-2023-11-29.csv') 
     try: application_process_df = pd.read_csv(f'data/application_process-{todays_date}.csv')
-    except: application_process_df = pd.read_csv(f'data/application_process-2023-11-26.csv')
+    except: application_process_df = pd.read_csv(f'data/application_process-2023-11-29.csv')
 
     ad_qualities_df = pd.merge(csb_df, apply_at_advertisers_df, on='UID', how='left')
     ad_qualities_df = pd.merge(ad_qualities_df, application_process_df, on='UID', how='left')
