@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import MySQLdb
-from app.databaseconnection import database_query
+from databaseconnection import database_query
 
 todays_date = datetime.now().date()
 
