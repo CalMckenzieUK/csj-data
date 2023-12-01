@@ -20,6 +20,7 @@ todays_date = datetime.now().date()
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    print('main triggered')
     var_test = 'nothing'
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
