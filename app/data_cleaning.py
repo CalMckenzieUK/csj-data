@@ -62,37 +62,43 @@ def cleaning():
     ad_qualities_df = pd.merge(csb_df, apply_at_advertisers_df, on='UID', how='left')
     ad_qualities_df = pd.merge(ad_qualities_df, application_process_df, on='UID', how='left')
 
-    # # ad_qualities_df.to_csv(f'data/ad_qualities-{todays_date}.csv', index=False)
-    # database_query("DROP TABLE IF EXISTS ad_qualties;")
-    # database_query("DROP TABLE IF EXISTS ad_qualities;")
-    # with open('app/SQL/create_ad_qualities.sql', 'r') as file:
-    #     create_table_sql = file.read()
-    # database_query(create_table_sql)
+    # ad_qualities_df.to_csv(f'data/ad_qualities-{todays_date}.csv', index=False)
+    database_query("DROP TABLE IF EXISTS ad_qualties;")
+    database_query("DROP TABLE IF EXISTS ad_qualities;")
+    with open('app/SQL/create_ad_qualities.sql', 'r') as file:
+        create_table_sql = file.read()
+    database_query(create_table_sql)
     
-    # rows = [tuple(x) for x in ad_qualities_df.to_numpy()]
-    # for i in rows:
-    #     database_query(f'''insert into ad_qualities (job_uid, 
-    #     developing_self_and_others, 
-    #     leadership,
-    #     making_effective_decisions,
-    #     seeing_the_big_picture,
-    #     managing_a_quality_service,
-    #     working_together,
-    #     communicating_and_influencing,
-    #     changing_and_improving,
-    #     delivering_at_pace,
-    #     apply_at_advertisers_site,
-    #     cv,
-    #     personal_statement,
-    #     reference_request,
-    #     application_form,
-    #     cover_letter,
-    #     presentation,
-    #     interview,
-    #     portfolio,
-    #     test)
-    #     values {i}''')
+    rows = [tuple(x) for x in ad_qualities_df.to_numpy()]
+    for i in rows:
+        database_query(f'''insert into ad_qualities (job_uid, 
+        developing_self_and_others, 
+        leadership,
+        making_effective_decisions,
+        seeing_the_big_picture,
+        managing_a_quality_service,
+        working_together,
+        communicating_and_influencing,
+        changing_and_improving,
+        delivering_at_pace,
+        apply_at_advertisers_site,
+        cv,
+        personal_statement,
+        reference_request,
+        application_form,
+        cover_letter,
+        presentation,
+        interview,
+        portfolio,
+        test)
+        values {i}''')
+
     
+
+
+
+if __name__ == '__main__':
+    cleaning()
     new_df = pd.DataFrame(database_query('select * from ad_qualities limit 6;'), columns=['job_uid', 
         'developing_self_and_others', 
         'leadership',
@@ -113,11 +119,5 @@ def cleaning():
         'interview',
         'portfolio',
         'test'] )
-    print(new_df)
-
-
-if __name__ == '__main__':
-    cleaning()
-
 
         

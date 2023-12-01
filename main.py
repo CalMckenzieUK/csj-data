@@ -1,5 +1,5 @@
 from app.csj_scrape import scrape, button_click, full_ad
-from app.data_cleaning import cleaning
+from app.data_cleaning import cleaning, new_df
 from app.dict_to_df import dict_to_df, dict_to_def_setup_and_execution
 from app.nlp_analysis import application_process, apply_at_advertisers_site, civil_service_behaviours
 from app.function_test import function_test
@@ -34,6 +34,7 @@ def main():
     apply_at_advertisers_site(full_text)
     civil_service_behaviours(full_text)
     dict_to_def_setup_and_execution()
+    cleaning()
     
     
 
