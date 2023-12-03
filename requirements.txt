@@ -9,4 +9,4 @@ streamlit_aggrid
 gunicorn==20.0.4
 python-dotenv
 sqlalchemy
-# mysqlclient == 1.4.1
+mysqlclient

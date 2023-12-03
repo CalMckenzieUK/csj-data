@@ -1,3 +1,9 @@
+# CSJ Helper
+
+Basic UI on top of CSJ dataset which allows users to more quicky find vacancies they are interested in. Can also be used to show insight into the data generally, including elements like most common application processes (eg. jobs requiring interviews, personal statements, CVs; and which behaviours are the most common; which jobs can be applied for via CSJ itself vs the job-holder's website.)
+
+
+
 # Desired features
 
 - [x] Shows all high-level basic CSJ vacancy data
