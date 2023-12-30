@@ -1,6 +1,7 @@
 import os
 import MySQLdb
 from dotenv import load_dotenv
+import pandas as pd
 
 
 load_dotenv()
@@ -27,6 +28,8 @@ def database_query(sql_query):
         connection.close()
 
 if __name__ == '__main__':
-    with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
-        sql_query = sql_file.read()
-    print(database_query(sql_query))
+    # with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
+    #     sql_query = sql_file.read()
+
+    sql_query = 'select * from cleaned_data;'
+    print(pd.DataFrame(database_query(sql_query)))

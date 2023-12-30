@@ -5,6 +5,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from datetime import datetime, date
+from app.databaseconnection import database_query
+import os
+from dotenv import load_dotenv
+load_dotenv()
 todays_date = date.today()
 
 def button_click():
@@ -37,7 +41,7 @@ def button_click():
 def scrape(url):
     print('starting scrape')
     job_data = []
-    for i in url:
+    for i in url[0:1]:
         soup = BeautifulSoup(i, 'html.parser')
         job_postings = soup.find_all('li', class_='search-results-job-box')
         for posting in job_postings:
@@ -59,7 +63,27 @@ def scrape(url):
     
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
     todays_date = date.today()
-    df.to_csv(f'data/data-{todays_date}.csv', index=False)
+    # df.to_csv(f'data/data-{todays_date}.csv', index=False)
+
+    with open('app/SQL/create_scraped_data.sql', 'r') as file:
+        create_table_sql = file.read()
+    database_query(create_table_sql)
+    
+    rows = [tuple(x) for x in df.to_numpy()]
+    for i in rows:
+        database_query(f'''
+            insert into scraped_data 
+                (title
+                , department
+                , location
+                , salary
+                , closing_date
+                , uid
+                , url)
+            values {i}''')
+
+
+
     print('finished scrape')
     return df
     
@@ -97,10 +121,15 @@ def full_ad(df):
     for i in page_texts:
         page_texts_dict[i[0][0]] = i[0][1]
     page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
-    page_texts_df.to_csv(f'data/full_ad_text-{todays_date}.csv', index=False)
-    with open(f'data/dicts/full_ad_text-{todays_date}.txt', 'w') as f:
-        f.write(str(page_texts_dict))   
-    print('finished full_ad')     
+    with open('app/SQL/create_full_ad_text.sql', 'r') as file:
+        create_table_sql = file.read()
+    database_query(create_table_sql)
+    
+    rows = [tuple(x) for x in page_texts_df.to_numpy()]
+    for i in rows:
+        element = [i[0],str(i[1]).replace('[','').replace(']','')]
+        database_query(f'''
+            insert into full_ad_text (uid, full_ad_text) values {element[0], element[1]}''') 
     return page_texts_df
 
 if __name__ == "__main__":
