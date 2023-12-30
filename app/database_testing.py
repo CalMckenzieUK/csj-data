@@ -1,6 +1,8 @@
 import os
 import MySQLdb
 from dotenv import load_dotenv
+
+
 load_dotenv()
 
 def database_query(sql_query):
@@ -12,11 +14,10 @@ def database_query(sql_query):
         autocommit=True,
         # ssl_mode="VERIFY_iDENTITY",
         ssl={"ca": "/etc/ssl/certs/ca-certificates.crt"})
-    print('connected')
+
     try:
         c = connection.cursor()
         c.execute(sql_query)
-        print('query executed')
         results = c.fetchall()
         return results
     except MySQLdb.Error as e:
@@ -25,4 +26,7 @@ def database_query(sql_query):
         c.close()
         connection.close()
 
-print(database_query('select * from test'))
+if __name__ == '__main__':
+    with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
+        sql_query = sql_file.read()
+    print(database_query(sql_query))

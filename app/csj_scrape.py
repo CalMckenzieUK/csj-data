@@ -5,6 +5,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from datetime import datetime, date
+from databaseconnection import database_query
+import os
+from dotenv import load_dotenv
+load_dotenv()
 todays_date = date.today()
 
 def button_click():

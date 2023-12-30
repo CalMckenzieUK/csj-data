@@ -1,3 +1,4 @@
+drop table if exists ad_qualities; 
 create table ad_qualities
 (
 job_uid int not null primary key, 
