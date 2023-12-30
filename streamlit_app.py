@@ -90,5 +90,3 @@ st.write(f''' \n Some headline stats from the data:
          ''')
 output_df = df[['Title', 'Department','Location', 'Salary', 'Closing Date', 'URL']]
 AgGrid(output_df, gridOptions=gridOptions, height=500, allow_unsafe_jscode=True, allow_unsafe_html=True, width='100%')
-
-print(AgGrid)
