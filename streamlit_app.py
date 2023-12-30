@@ -8,14 +8,14 @@ todays_date = datetime.now().date()
 
 try: df = pd.DataFrame(database_query('select * from cleaned_data'))
 except: print('Error when trying to query database for cleaned_data')
-df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'Full Text']
+df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
 #basic metrics from dataframe
 st.set_page_config(layout="wide")
 max_sal = df['Salary_int'].max()
 
-df['Full Text'] = df['Full Text'].astype(str)
+# df['Full Text'] = df['Full Text'].astype(str)
 # job_title_input = st.text_input('Search for a job title').lower()
 st.sidebar.title('Filters')
 st.sidebar.subheader('Job Title')
@@ -48,7 +48,7 @@ phrase_line = ''
 # else:
 #      phrase_line = ''
 
-df = df.drop('Full Text', axis=1)
+# df = df.drop('Full Text', axis=1)
 df = df.drop('UID', axis=1)
 df = df.drop('Salary_int', axis=1)
 number_of_vacancies = df.shape[0]
@@ -91,4 +91,4 @@ st.write(f''' \n Some headline stats from the data:
 output_df = df[['Title', 'Department','Location', 'Salary', 'Closing Date', 'URL']]
 AgGrid(output_df, gridOptions=gridOptions, height=500, allow_unsafe_jscode=True, allow_unsafe_html=True, width='100%')
 
-print('ran')
+print(AgGrid)

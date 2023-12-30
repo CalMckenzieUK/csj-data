@@ -23,14 +23,10 @@ def main():
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
     try:
-        ads = pd.DataFrame(database_query('select * from scraped_data'))
-        print('1')
+        ads = pd.DataFrame(database_query('select * from cleaned_data'))
         ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
-        print('2')
         full_text = pd.DataFrame(database_query('select * from full_ad_text'))
-        print('3')
         full_text.columns = ['UID', 'Full Text']
-        print('imported from database!')
     except:   
         print('started from scratch') 
         ads = scrape(button_click())
@@ -40,13 +36,6 @@ def main():
         civil_service_behaviours(full_text)
         dict_to_def_setup_and_execution()
         cleaning()
-    ads = scrape(button_click())
-    full_text = full_ad(ads)
-    application_process(full_text)
-    apply_at_advertisers_site(full_text)
-    civil_service_behaviours(full_text)
-    dict_to_def_setup_and_execution()
-    cleaning()
     
     
 
