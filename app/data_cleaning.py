@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 import MySQLdb
-from databaseconnection import database_query
+#from databaseconnection import database_query
+
 
 todays_date = datetime.now().date()
 
@@ -92,13 +93,34 @@ def cleaning():
         portfolio,
         test)
         values {i}''')
-
+    new_df = pd.DataFrame(database_query('select * from ad_qualities limit 6;'), columns=['job_uid', 
+        'developing_self_and_others', 
+        'leadership',
+        'making_effective_decisions',
+        'seeing_the_big_picture',
+        'managing_a_quality_service',
+        'working_together',
+        'communicating_and_influencing',
+        'changing_and_improving',
+        'delivering_at_pace',
+        'apply_at_advertisers_site',
+        'cv',
+        'personal_statement',
+        'reference_request',
+        'application_form',
+        'cover_letter',
+        'presentation',
+        'interview',
+        'portfolio',
+        'test'] )
+    return new_df
     
 
 
 
 if __name__ == '__main__':
     cleaning()
+    from databaseconnection import database_query
     new_df = pd.DataFrame(database_query('select * from ad_qualities limit 6;'), columns=['job_uid', 
         'developing_self_and_others', 
         'leadership',

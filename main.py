@@ -1,8 +1,9 @@
 from app.csj_scrape import scrape, button_click, full_ad
-from app.data_cleaning import cleaning, new_df
+from app.data_cleaning import cleaning
 from app.dict_to_df import dict_to_df, dict_to_def_setup_and_execution
 from app.nlp_analysis import application_process, apply_at_advertisers_site, civil_service_behaviours
 from app.function_test import function_test
+from app.databaseconnection import database_query
 from markupsafe import Markup
 from flask import request, url_for, Flask
 import pandas as pd
