@@ -15,7 +15,7 @@ connection = MySQLdb.connect(
     passwd=os.getenv("DATABASE_PASSWORD"),
     db=os.getenv("DATABASE"),
     autocommit=True,
-    ssl_mode="VERIFY_CA",
+    # ssl_mode="VERIFY_IDENTITY",
     # See https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
     # to determine the path to your operating systems certificate file.
     ssl      = {

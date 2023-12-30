@@ -1,12 +1,11 @@
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+# from sqlalchemy import create_engine
+# from sqlalchemy.orm import sessionmaker
 
 # Load environment variables from the .env file
 load_dotenv()
 import os
 import MySQLdb
-
 
 # def sql_alchemy_database_connection():
 
@@ -26,13 +25,15 @@ import MySQLdb
 
 #     result = connection.execute("SELECT * FROM test;")
 #     print("Result:", result)
+
+
 connection = MySQLdb.connect(
     host=os.getenv("DATABASE_HOST"),
     user=os.getenv("DATABASE_USERNAME"),
     passwd=os.getenv("DATABASE_PASSWORD"),
     db=os.getenv("DATABASE"),
     autocommit=True,
-    ssl_mode="VERIFY_CA",
+    # ssl_mode="VERIFY_CA",
     # See https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
     # to determine the path to your operating systems certificate file.
     ssl      = {
@@ -48,7 +49,7 @@ def database_query(sql_query):
     passwd=os.getenv("DATABASE_PASSWORD"),
     db=os.getenv("DATABASE"),
     autocommit=True,
-    ssl_mode="VERIFY_CA",
+    # ssl_mode="VERIFY_iDENTITY",
     # See https://planetscale.com/docs/concepts/secure-connections#ca-root-configuration
     # to determine the path to your operating systems certificate file.
     ssl      = {
