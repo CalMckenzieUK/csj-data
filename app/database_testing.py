@@ -1,6 +1,7 @@
 import os
 import MySQLdb
 from dotenv import load_dotenv
+import pandas as pd
 
 
 load_dotenv()
@@ -30,5 +31,5 @@ if __name__ == '__main__':
     # with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
     #     sql_query = sql_file.read()
 
-    sql_query = 'select * from full_ad_text limit 6;'
-    print(database_query(sql_query))
+    sql_query = 'select * from cleaned_data;'
+    print(pd.DataFrame(database_query(sql_query)))

@@ -1,26 +1,20 @@
 import pandas as pd
 from datetime import datetime
-from databaseconnection import database_query
+from app.databaseconnection import database_query
 
 todays_date = datetime.now().date()
 
 def cleaning():
     try: 
-        df  = pd.DataFrame(pd.read_csv(f'data/data-{todays_date}.csv'))
-    except: 
-        
-        
-        print('used old file in cleaning 1')
-        df = pd.DataFrame(pd.read_csv(f'data/data-2023-11-29.csv'))
-
+        df  = pd.DataFrame(database_query('select * from scraped_data'))
+    except Exception as e:        
+        print('Error when trying to query database for scraped_data: ', e)
     try:
-        df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-{todays_date}.csv'))
-    except:
-            
-        print('used old file in cleaning 2')
-        df_full_ad = pd.DataFrame(pd.read_csv(f'data/full_ad_text-2023-11-29.csv'))
-    print(df['Closing Date'])
-
+        df_full_ad = pd.DataFrame(database_query('select * from full_ad_text'))
+    except Exception as e:    
+        print('Error when trying to query database for full_ad_text: ', e)
+    df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
+    df_full_ad.columns = ['UID', 'Full Ad Text']
     df = pd.merge(df, df_full_ad, on='UID', how='left')
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
     df['Salary'] = df['Salary'].str.extract(r'(\d{2,3},\d{3})')
@@ -31,13 +25,26 @@ def cleaning():
     df['Closing Date'] = pd.to_datetime(df['Closing Date'], format='%d %B %Y')
     df.to_csv(f'data/cleaned_data-{todays_date}.csv', index=False)
 
+    database_query("DROP TABLE IF EXISTS cleaned_data;")
+    with open('app/SQL/create_cleaned_data.sql', 'r') as file:
+        create_table_sql = file.read()
+    database_query(create_table_sql)
+    rows = [tuple(x) for x in df.to_numpy()]
+    for i in rows:
+        database_query(f'''insert into cleaned_data (title, department, location, salary, closing_date, uid, url, full_ad_text)
+        values {i}''')
 
-    try: csb_df = pd.read_csv(f'data/cs_behaviours-{todays_date}.csv')
-    except: csb_df = pd.read_csv(f'data/cs_behaviours-2023-11-29.csv')
-    try: apply_at_advertisers_df = pd.read_csv(f'data/apply_at_advertisers_site-{todays_date}.csv')
-    except: apply_at_advertisers_df = pd.read_csv(f'data/apply_at_advertisers_site-2023-11-29.csv') 
-    try: application_process_df = pd.read_csv(f'data/application_process-{todays_date}.csv')
-    except: application_process_df = pd.read_csv(f'data/application_process-2023-11-29.csv')
+    try: csb_df = pd.DataFrame(database_query('select * from cs_behaviours'))
+    except Exception as e: print('Error when trying to query database for cs_behaviours: ', e)
+    try: apply_at_advertisers_df = pd.DataFrame(database_query('select * from apply_at_advertisers_site'))
+    except Exception as e: print('Error when trying to query database for apply_at_advertisers_site: ', e)
+    try: application_process_df = pd.DataFrame(database_query('select * from application_process'))
+    except Exception as e: print('Error when trying to query database for application_process: ', e)
+
+    #csb_df columns: UID, Seeing the Big Picture, Changing and Improving, Making Effective Decisions, Communicating and Influencing, Leadership, Working Together, Delivering at Pace, Managing a Quality Service, Developing Self and Others
+    csb_df.columns = ['UID', 'Making Effective Decisions', 'Changing and Improving', 'Seeing the Big Picture', 'Communicating and Influencing', 'Working Together', 'Managing a Quality Service', 'Leadersip', 'Delivering at Pace', 'Developing Self and Others']
+    apply_at_advertisers_df.columns = ['UID', 'Apply at Advertiser\'s Site']
+    application_process_df.columns = ['UID', 'CV', 'Personal Statement', 'References', 'Application Form', 'Cover Letter', 'Presentation', 'Interview', 'Portfolio', 'Test']
 
     ad_qualities_df = pd.merge(csb_df, apply_at_advertisers_df, on='UID', how='left')
     ad_qualities_df = pd.merge(ad_qualities_df, application_process_df, on='UID', how='left')

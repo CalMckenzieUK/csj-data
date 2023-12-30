@@ -1,6 +1,7 @@
 import pandas as pd 
 from datetime import datetime
 
+
 todays_date = datetime.now().date() 
 
 def application_process(df):
@@ -88,13 +89,13 @@ def civil_service_behaviours(df):
     return csb_dict
 
 if __name__ == "__main__":
+    from databaseconnection import database_query
     try:
-        df = pd.read_csv(f'data/full_ad_text-{todays_date}.csv')
+        df = pd.DataFrame(database_query('select * from full_ad_text'), columns=['UID', 'Full Text'])
         application_process(df)
         apply_at_advertisers_site(df)
         civil_service_behaviours(df)
-    except:
-        df = pd.read_csv(f'data/full_ad_text-2023-11-29.csv')
-        application_process(df)
-        apply_at_advertisers_site(df)
-        civil_service_behaviours(df)
+    except Exception as e:
+        print('Failed to import from full_ad_text: ', e)
+else:
+    from app.databaseconnection import database_query

@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 from datetime import datetime, date
-from databaseconnection import database_query
+from app.databaseconnection import database_query
 import os
 from dotenv import load_dotenv
 load_dotenv()

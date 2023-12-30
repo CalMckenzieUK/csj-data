@@ -1,11 +1,13 @@
 import streamlit as st 
 import pandas as pd
 from datetime import datetime
+from app.databaseconnection import database_query
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 todays_date = datetime.now().date()
 
-try: df = pd.read_csv(f'data/cleaned_data-{todays_date}.csv')
-except: df = pd.read_csv(f'data/cleaned_data-2023-11-29.csv')
+try: df = pd.DataFrame(database_query('select * from cleaned_data'))
+except: print('Error when trying to query database for cleaned_data')
+df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'Full Text']
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
 #basic metrics from dataframe
@@ -87,3 +89,5 @@ st.write(f''' \n Some headline stats from the data:
          ''')
 output_df = df[['Title', 'Department','Location', 'Salary', 'Closing Date', 'URL']]
 AgGrid(output_df, gridOptions=gridOptions, height=500, allow_unsafe_jscode=True, allow_unsafe_html=True, width='100%')
+
+print('ran')
