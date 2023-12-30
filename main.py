@@ -23,12 +23,27 @@ def main():
     if request.method == 'POST':
         var_test = function_test(request.form['user_text'])
     try:
-        ads = pd.DataFrame(database_query('select * from cleaned_data'))
-        ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
-        full_text = pd.DataFrame(database_query('select * from full_ad_text'))
-        full_text.columns = ['UID', 'Full Text']
-    except:   
-        print('started from scratch') 
+        max_date = str(database_query('select max(scraped_dates) from scraped_dates')).strip('[(,)]')
+        print('max_date: ', max_date)
+        print(str(todays_date))
+        if max_date == str("'"+str(todays_date)+"'"):
+            print('started from database')
+            ads = pd.DataFrame(database_query('select * from cleaned_data'))
+            ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
+            full_text = pd.DataFrame(database_query('select * from full_ad_text'))
+            full_text.columns = ['UID', 'Full Text']
+            print('starting application_process')
+        else:
+            print('started from scratch') 
+            ads = scrape(button_click())
+            full_text = full_ad(ads)
+            application_process(full_text)
+            apply_at_advertisers_site(full_text)
+            civil_service_behaviours(full_text)
+            dict_to_def_setup_and_execution()
+            cleaning()
+    except Exception as e:   
+        print('started from scratch because of error: ', e)
         ads = scrape(button_click())
         full_text = full_ad(ads)
         application_process(full_text)

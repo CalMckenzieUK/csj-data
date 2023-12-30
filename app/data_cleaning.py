@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime
-from databaseconnection import database_query
+from app.databaseconnection import database_query
 
 todays_date = datetime.now().date()
 
@@ -84,6 +84,14 @@ def cleaning():
         values {i}''')
     
     new_df = pd.DataFrame(database_query('select * from ad_qualities limit 6;'))
+
+    with open('app/SQL/create_scraped_dates.sql', 'r') as file:
+        create_table_sql = file.read()
+    try:
+        database_query(create_table_sql)
+        database_query(f"insert into scraped_dates (scraped_dates) values ('{todays_date}')")
+    except:
+        database_query(f"insert into scraped_dates (scraped_dates) values ('{todays_date}')")
     return new_df
     
 

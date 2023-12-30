@@ -31,5 +31,5 @@ if __name__ == '__main__':
     # with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
     #     sql_query = sql_file.read()
 
-    sql_query = 'select * from cleaned_data;'
-    print(pd.DataFrame(database_query(sql_query)))
+    sql_query = 'select max(scraped_dates) from scraped_dates;'
+    print(str(database_query('select max(scraped_dates) from scraped_dates')).strip('[(,)]'))

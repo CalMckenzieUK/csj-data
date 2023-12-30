@@ -94,7 +94,7 @@ def full_ad(df):
     html = []
     page_texts = []
     counter = 0
-    for i in job_urls[0:10]:
+    for i in job_urls:
         print('now scraping: ', i)
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
