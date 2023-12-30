@@ -16,9 +16,6 @@ app = Flask(__name__)
 todays_date = datetime.now().date() 
 
 
-
-
-
 @app.route('/', methods=['GET', 'POST'])
 def main():
     print('main triggered')
@@ -43,6 +40,13 @@ def main():
         civil_service_behaviours(full_text)
         dict_to_def_setup_and_execution()
         cleaning()
+    ads = scrape(button_click())
+    full_text = full_ad(ads)
+    application_process(full_text)
+    apply_at_advertisers_site(full_text)
+    civil_service_behaviours(full_text)
+    dict_to_def_setup_and_execution()
+    cleaning()
     
     
 
