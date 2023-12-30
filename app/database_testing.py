@@ -27,6 +27,8 @@ def database_query(sql_query):
         connection.close()
 
 if __name__ == '__main__':
-    with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
-        sql_query = sql_file.read()
+    # with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
+    #     sql_query = sql_file.read()
+
+    sql_query = 'select * from full_ad_text limit 6;'
     print(database_query(sql_query))
