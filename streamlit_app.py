@@ -3,16 +3,23 @@ import pandas as pd
 from datetime import datetime
 from app.databaseconnection import database_query
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
-from app.databaseconnection import database_query
-todays_date = datetime.now().date()
+import sqlalchemy
 
-try: df = pd.DataFrame(database_query('select * from cleaned_data'))
-except: print('Error when trying to query database for cleaned_data')
+todays_date = datetime.now().date()
+st.set_page_config(layout="wide")
+# try: df = pd.DataFrame(database_query('select * from cleaned_data'))
+try: 
+        conn = st.connection("mysql", type="sql")
+        print('connected')
+        df = conn.query('select * from cleaned_data')
+        print(df.head())
+
+except Exception as e : print('Error when trying to query database for cleaned_data: ', e)
 df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
 #basic metrics from dataframe
-st.set_page_config(layout="wide")
+
 max_sal = df['Salary_int'].max()
 
 # df['Full Text'] = df['Full Text'].astype(str)
