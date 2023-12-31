@@ -8,5 +8,4 @@ selenium == 4.15.2
 streamlit_aggrid
 gunicorn==20.0.4
 python-dotenv
-mysqlclient
 SQLAlchemy
