@@ -8,22 +8,16 @@ import sqlalchemy
 todays_date = datetime.now().date()
 st.set_page_config(layout="wide")
 # try: df = pd.DataFrame(database_query('select * from cleaned_data'))
-try: 
-        conn = st.connection("mysql", type="sql")
-        print('connected')
-        df = conn.query('select * from cleaned_data')
-        print(df.head())
 
-except Exception as e : print('Error when trying to query database for cleaned_data: ', e)
+conn = st.connection("mysql", type="sql")
+df = conn.query('select * from cleaned_data')
+
 df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
-#basic metrics from dataframe
 
 max_sal = df['Salary_int'].max()
 
-# df['Full Text'] = df['Full Text'].astype(str)
-# job_title_input = st.text_input('Search for a job title').lower()
 st.sidebar.title('Filters')
 st.sidebar.subheader('Job Title')
 job_title_input = st.sidebar.text_input('Search for a job title').lower()
@@ -36,17 +30,11 @@ location_input = st.sidebar.text_input('Search for a location').lower()
 st.sidebar.subheader('Salary range slider')
 salary_range = st.sidebar.slider('Salary range', 0, max_sal, (0, max_sal))
 
-
-
-
-
 if st.sidebar.button('Clear Filters'):
     job_title_input = ''
     department_input = ''
 
-#filter dataframe by job title
-df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) & 
-        # df['Full Text'].str.lower().str.contains(str(all_text_input)) & 
+df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) &  
         df['Location'].str.lower().str.contains(location_input) & df['Salary_int'].between(salary_range[0], salary_range[1])]
 job_texts_containing_data = df.shape[0]
 phrase_line = ''
@@ -62,9 +50,6 @@ number_of_vacancies = df.shape[0]
 different_departments = df['Department'].nunique()
 job_titles = df['Title'].nunique()
 job_titles_containing_data = df['Title'].str.contains(job_title_input).sum()
-
-
-
 
 gb = GridOptionsBuilder.from_dataframe(df)
 gb.configure_column("URL",
@@ -86,7 +71,6 @@ gb.configure_column("URL",
                         """))
 gb.configure_default_column(min_column_width=235)
 gridOptions = gb.build()
-
 
 st.write(f''' \n Some headline stats from the data: 
         
