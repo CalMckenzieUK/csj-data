@@ -121,6 +121,7 @@ def full_ad(df):
     for i in page_texts:
         page_texts_dict[i[0][0]] = i[0][1]
     page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
+    page_texts_df['UID'] = page_texts_df['UID'].str.replace('Reference : ', '').astype(str)
     with open('app/SQL/create_full_ad_text.sql', 'r') as file:
         create_table_sql = file.read()
     database_query(create_table_sql)

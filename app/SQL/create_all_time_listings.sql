@@ -1,4 +1,4 @@
-create table all_time_listings
+create table if not exists all_time_listings
 (
 title varchar(255),
 department varchar(255),

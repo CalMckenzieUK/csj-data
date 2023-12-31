@@ -1,4 +1,5 @@
-create table scraped_dates
+
+CREATE TABLE IF NOT EXISTS scraped_dates
 (
-scraped_dates varchar(255)
+scraped_date varchar(255)
 )

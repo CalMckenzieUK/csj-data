@@ -15,8 +15,9 @@ def cleaning():
         print('Error when trying to query database for full_ad_text: ', e)
     df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
     df_full_ad.columns = ['UID', 'Full Ad Text']
-    df = pd.merge(df, df_full_ad, on='UID', how='left')
+    df_full_ad['UID'] = df_full_ad['UID'].str.replace('Reference : ', '').astype(str)
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
+    df = pd.merge(df, df_full_ad, on='UID', how='left')
     df['Salary'] = df['Salary'].str.extract(r'(\d{2,3},\d{3})')
     #split closing date by spaces and take the last 3 items in the list
     df['Closing Date'] = df['Closing Date'].str.split().str[-3:].str.join(' ').str.replace('th', '').str.replace('rd', '').str.replace('nd', '').str.replace('st', '')
@@ -56,7 +57,7 @@ def cleaning():
     with open('app/SQL/create_ad_qualities.sql', 'r') as file:
         create_ad_qualities_table_sql = file.read()
     database_query(create_ad_qualities_table_sql)
-    
+    print('1')
     rows = [tuple(x) for x in ad_qualities_df.to_numpy()]
     for i in rows:
         database_query(f'''insert into ad_qualities (job_uid, 
@@ -85,22 +86,19 @@ def cleaning():
 
     with open('app/SQL/create_scraped_dates.sql', 'r') as file:
         create_scraped_table_sql = file.read()
-    try:
-        database_query(create_scraped_table_sql)
-        database_query(f"insert into scraped_dates (scraped_dates) values ('{todays_date}')")
-    except:
-        database_query(f"insert into scraped_dates (scraped_dates) values ('{todays_date}')")
-
+    database_query(create_scraped_table_sql)
+    database_query(f"insert into scraped_dates (scraped_date) values ('{todays_date}')")
+    print('2')
 
     with open('app/SQL/create_all_time_listings.sql', 'r') as file:
             create_all_time_table_sql = file.read()
+    database_query(create_all_time_table_sql)
+    print('3')
     with open('app/SQL/insert_new_into_all_time.sql', 'r') as file:
             insert_all_time_sql = file.read()
-    try:
-        database_query(create_all_time_table_sql)
-        database_query(insert_all_time_sql)
-    except:
-        database_query(insert_all_time_sql)
+    print('3.5')
+    database_query(insert_all_time_sql)
+    print('4')
 
     return new_df
     

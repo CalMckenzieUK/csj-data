@@ -10,9 +10,9 @@ st.set_page_config(layout="wide")
 # try: df = pd.DataFrame(database_query('select * from cleaned_data'))
 
 conn = st.connection("mysql", type="sql")
-df = conn.query('select * from cleaned_data')
+df = conn.query('select * from all_time_listings')
 
-df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
+df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'Full Text']
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
 
@@ -23,8 +23,8 @@ st.sidebar.subheader('Job Title')
 job_title_input = st.sidebar.text_input('Search for a job title').lower()
 st.sidebar.subheader('Department')
 department_input = st.sidebar.text_input('Search for a department').lower()
-# st.sidebar.subheader('All text in ad')
-# all_text_input = st.sidebar.text_input('Search all text in ad for a keyword').lower()
+st.sidebar.subheader('All text in ad')
+all_text_input = st.sidebar.text_input('Search all text in ad for a keyword').lower()
 st.sidebar.subheader('Location')
 location_input = st.sidebar.text_input('Search for a location').lower()
 st.sidebar.subheader('Salary range slider')
@@ -34,16 +34,20 @@ if st.sidebar.button('Clear Filters'):
     job_title_input = ''
     department_input = ''
 
-df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) &  
-        df['Location'].str.lower().str.contains(location_input) & df['Salary_int'].between(salary_range[0], salary_range[1])]
+# df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) &  
+#         df['Location'].str.lower().str.contains(location_input) & df['Salary_int'].between(salary_range[0], salary_range[1])]
+    
+df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) & 
+        df['Full Text'].str.lower().str.contains(all_text_input) & df['Location'].str.lower().str.contains(location_input)]
+
 job_texts_containing_data = df.shape[0]
 phrase_line = ''
-# if len(all_text_input)> 0:
-#         phrase_line = f'''Showing ads which contain the word "{all_text_input}"'''
-# else:
-#      phrase_line = ''
+if len(all_text_input)> 0:
+        phrase_line = f'''Showing ads which contain the word "{all_text_input}"'''
+else:
+     phrase_line = ''
 
-# df = df.drop('Full Text', axis=1)
+df = df.drop('Full Text', axis=1)
 df = df.drop('UID', axis=1)
 df = df.drop('Salary_int', axis=1)
 number_of_vacancies = df.shape[0]
