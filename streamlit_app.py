@@ -1,7 +1,7 @@
 import streamlit as st 
 import pandas as pd
 from datetime import datetime
-from app.databaseconnection import database_query
+# from app.databaseconnection import database_query
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 import sqlalchemy
 
