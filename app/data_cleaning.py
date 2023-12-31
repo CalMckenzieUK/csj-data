@@ -14,7 +14,7 @@ def cleaning():
     except Exception as e:    
         print('Error when trying to query database for full_ad_text: ', e)
     df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
-    df_full_ad.columns = ['UID', 'Full Ad Text']
+    df_full_ad.columns = ['UID', 'Full Ad Text', 'scraped_date']
     df_full_ad['UID'] = df_full_ad['UID'].str.replace('Reference : ', '').astype(str)
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
     df = pd.merge(df, df_full_ad, on='UID', how='left')
@@ -32,10 +32,11 @@ def cleaning():
         create_table_sql = file.read()
     database_query(create_table_sql)
     df.drop('Full Ad Text', axis=1, inplace=True)
+    df['scraped_date'] = str(todays_date)
     rows = [tuple(x) for x in df.to_numpy()]
 
     for i in rows:
-        database_query(f"insert into cleaned_data (title, department, location, salary, closing_date, uid, url) values {i}")
+        database_query(f"insert into cleaned_data (title, department, location, salary, closing_date, uid, url, scraped_date) values {i}")
 
     try: csb_df = pd.DataFrame(database_query('select * from cs_behaviours'))
     except Exception as e: print('Error when trying to query database for cs_behaviours: ', e)

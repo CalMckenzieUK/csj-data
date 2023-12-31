@@ -21,9 +21,9 @@ def run_etl_pipeline(regardless_of_date=False):
     if max_date == str("'"+str(todays_date)+"'") and regardless_of_date == False:
         print('started from database')
         ads = pd.DataFrame(database_query('select * from cleaned_data'))
-        ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
+        ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'scraped_date']
         full_text = pd.DataFrame(database_query('select * from full_ad_text'))
-        full_text.columns = ['UID', 'Full Text']
+        full_text.columns = ['UID', 'Full Text', 'scraped_date']
         print('starting application_process')
     else:
         ads = scrape(button_click())
@@ -31,8 +31,11 @@ def run_etl_pipeline(regardless_of_date=False):
         application_process(full_text)
         apply_at_advertisers_site(full_text)
         civil_service_behaviours(full_text)
+        print('starting dict_to_df')
         dict_to_def_setup_and_execution()
+        print('starting cleaning')
         cleaning()
+        print('finished cleaning')
     return f'Refreshed as of {str(todays_date)}'
 
 
@@ -44,9 +47,9 @@ def main():
         run_etl_pipeline(True) 
     max_date = str(database_query('select max(scraped_date) from scraped_dates')).strip('[(,)]')
     ads = pd.DataFrame(database_query('select * from cleaned_data'))
-    ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
+    ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'scraped_date']
     full_text = pd.DataFrame(database_query('select * from full_ad_text'))
-    full_text.columns = ['UID', 'Full Text']
+    full_text.columns = ['UID', 'Full Text', 'scraped_date']
 
     homepage_title = "CS Jobs Helper"
     main_content_title = 'Current vacancies'

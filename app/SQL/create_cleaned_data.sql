@@ -7,5 +7,6 @@ location text,
 salary varchar(255),
 closing_date varchar(255),
 uid varchar(255) not null primary key,
-url text
+url text,
+scraped_date varchar(255)
 )

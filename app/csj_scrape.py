@@ -125,12 +125,12 @@ def full_ad(df):
     with open('app/SQL/create_full_ad_text.sql', 'r') as file:
         create_table_sql = file.read()
     database_query(create_table_sql)
-    
+    page_texts_df['scraped_date'] = str(todays_date)
     rows = [tuple(x) for x in page_texts_df.to_numpy()]
     for i in rows:
-        element = [i[0],str(i[1]).replace('[','').replace(']','')]
+        element = [i[0],str(i[1]).replace('[','').replace(']',''), i[2]]
         database_query(f'''
-            insert into full_ad_text (uid, full_ad_text) values {element[0], element[1]}''') 
+            insert into full_ad_text (uid, full_ad_text, scraped_date) values {element[0], element[1], element[2]}''') 
     return page_texts_df
 
 if __name__ == "__main__":

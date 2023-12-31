@@ -11,6 +11,7 @@ def application_process(df):
     application_process_dict = {}
 
     for i in range(len(df['Full Text'])):
+        print(texts[i])
         cv = {'CV':'False'}
         personal_statement = {'Personal Statement':'False'}
         references = {'References':'False'}
@@ -21,23 +22,23 @@ def application_process(df):
         portfolio = {'Portfolio':'False'}
         test = {'Test':'False'}
 
-        if 'CV' in texts[i]:
+        if 'CV' in str(texts[i]).lower():
             cv['CV'] = 'True'
-        if 'Personal Statement' in texts[i]:
+        if 'personal statement' in str(texts[i]).lower():
             personal_statement['Personal Statement'] = 'True'
-        if 'References' in texts[i]:
+        if 'references' in str(texts[i]).lower():
             references['References'] = 'True'
-        if 'Application Form' in texts[i]:
+        if 'application form' in str(texts[i]).lower():
             application_form['Application Form'] = 'True'
-        if 'Cover Letter' in texts[i]:
+        if 'cover letter' in str(texts[i]).lower():
             cover_letter['Cover Letter'] = 'True'
-        if 'Presentation' in texts[i]:
+        if 'presentation' in str(texts[i]).lower():
             presentation['Presentation'] = 'True'
-        if 'Interview' in texts[i]:
+        if 'interview' in str(texts[i]).lower():
             interview['Interview'] = 'True'
-        if 'Portfolio' in texts[i]:
+        if 'portfolio' in str(texts[i]).lower():
             portfolio['Portfolio'] = 'True'
-        if 'Test' in texts[i]:
+        if 'test' in str(texts[i]).lower():
             test['Test'] = 'True'
 
         application_process_dict[uids[i]] = [cv, personal_statement, references, application_form, cover_letter, presentation, interview, portfolio, test]
@@ -56,7 +57,7 @@ def apply_at_advertisers_site(df):
     for i in range(len(df['Full Text'])):
         apply_at_advertisers_sites = {"Apply at advertiser's site":False}
 
-        if "Apply at advertiser's site" in texts[i]:
+        if "apply at advertiser" in str(texts[i]).lower():
             apply_at_advertisers_sites["Apply at advertiser's site"] = True
 
         apply_at_advertisers_sites_dict[uids[i]] = [apply_at_advertisers_sites]
