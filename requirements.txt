@@ -10,3 +10,4 @@ gunicorn==20.0.4
 python-dotenv
 SQLAlchemy
 mysqlclient==2.2.1
+pykg-config
