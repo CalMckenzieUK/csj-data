@@ -27,7 +27,6 @@ def cleaning():
     df['Closing Date'] = df['Closing Date'].astype(str)
     df.to_csv(f'data/cleaned_data-{todays_date}.csv', index=False)
 
-    database_query("DROP TABLE IF EXISTS cleaned_data;")
     with open('app/SQL/create_cleaned_data.sql', 'r') as file:
         create_table_sql = file.read()
     database_query(create_table_sql)
@@ -53,11 +52,10 @@ def cleaning():
     ad_qualities_df = pd.merge(ad_qualities_df, application_process_df, on='UID', how='left')
 
     # ad_qualities_df.to_csv(f'data/ad_qualities-{todays_date}.csv', index=False)
-    database_query("DROP TABLE IF EXISTS ad_qualties;")
     database_query("DROP TABLE IF EXISTS ad_qualities;")
     with open('app/SQL/create_ad_qualities.sql', 'r') as file:
-        create_table_sql = file.read()
-    database_query(create_table_sql)
+        create_ad_qualities_table_sql = file.read()
+    database_query(create_ad_qualities_table_sql)
     
     rows = [tuple(x) for x in ad_qualities_df.to_numpy()]
     for i in rows:
@@ -86,12 +84,24 @@ def cleaning():
     new_df = pd.DataFrame(database_query('select * from ad_qualities limit 6;'))
 
     with open('app/SQL/create_scraped_dates.sql', 'r') as file:
-        create_table_sql = file.read()
+        create_scraped_table_sql = file.read()
     try:
-        database_query(create_table_sql)
+        database_query(create_scraped_table_sql)
         database_query(f"insert into scraped_dates (scraped_dates) values ('{todays_date}')")
     except:
         database_query(f"insert into scraped_dates (scraped_dates) values ('{todays_date}')")
+
+
+    with open('app/SQL/create_all_time_listings.sql', 'r') as file:
+            create_all_time_table_sql = file.read()
+    with open('app/SQL/insert_new_into_all_time.sql', 'r') as file:
+            insert_all_time_sql = file.read()
+    try:
+        database_query(create_all_time_table_sql)
+        database_query(insert_all_time_sql)
+    except:
+        database_query(insert_all_time_sql)
+
     return new_df
     
 

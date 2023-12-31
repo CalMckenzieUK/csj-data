@@ -32,4 +32,4 @@ if __name__ == '__main__':
     #     sql_query = sql_file.read()
 
     sql_query = 'select max(scraped_dates) from scraped_dates;'
-    print(str(database_query('select max(scraped_dates) from scraped_dates')).strip('[(,)]'))
+    print(str(database_query('select * from scraped_dates')).strip('[(,)]'))
