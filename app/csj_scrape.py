@@ -40,8 +40,9 @@ def button_click():
 
 def scrape(url):
     print('starting scrape')
+    print(len(url))
     job_data = []
-    for i in url[0:1]:
+    for i in url:
         soup = BeautifulSoup(i, 'html.parser')
         job_postings = soup.find_all('li', class_='search-results-job-box')
         for posting in job_postings:
@@ -62,77 +63,104 @@ def scrape(url):
         
     
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
-    todays_date = date.today()
+    done_df = pd.DataFrame(database_query('select distinct(uid) from all_time_listings'))
+    try: 
+        uid_array = done_df[0].to_list()
+    except: 
+        uid_array = []
+    #if the uid is in the uid_array, remove it from the dataframe
+    df['UID']=df['UID'].str.replace('Reference : ', '').astype(str)
+    df_uid_array = df['UID'].to_list()
+    df = df[~df['UID'].isin(uid_array)]
     # df.to_csv(f'data/data-{todays_date}.csv', index=False)
+    if df.shape[0] == 0:
+        print('no new data')
+        return df
+    else:
+        with open('app/SQL/create_scraped_data.sql', 'r') as file:
+            create_table_sql = file.read()
+        database_query(create_table_sql)
 
-    with open('app/SQL/create_scraped_data.sql', 'r') as file:
-        create_table_sql = file.read()
-    database_query(create_table_sql)
-    
-    rows = [tuple(x) for x in df.to_numpy()]
-    for i in rows:
-        database_query(f'''
-            insert into scraped_data 
-                (title
-                , department
-                , location
-                , salary
-                , closing_date
-                , uid
-                , url)
-            values {i}''')
+        rows = [tuple(x) for x in df.to_numpy()]
+        for i in rows:
+            print('adding to db')
+            database_query(f'''
+                insert into scraped_data 
+                    (title
+                    , department
+                    , location
+                    , salary
+                    , closing_date
+                    , uid
+                    , url)
+                values {i}''')
 
 
 
-    print('finished scrape')
-    return df
+        print('finished scrape')
+        return df
     
 def full_ad(df):
+    if df.shape[0] == 0:
+        print('no new data')
+        return df
     print('starting full_ad')
     job_uids = df['UID']
     job_urls = df['URL']
     html = []
     page_texts = []
     counter = 0
-    for i in job_urls:
-        print('now scraping: ', i)
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        driver = webdriver.Chrome(options=options)
-        driver.get(i)
-        driver.page_source
-        html.append(driver.page_source)
-        driver.quit()
-        for page_html in html:
-            soup = BeautifulSoup(page_html, 'html.parser')    
-            relevant_divs = soup.find('div', class_='vac_display_panel_main')
-            page_content = []  
-            for page_div in relevant_divs:    
-                try: 
-                    full_text = page_div.get_text().strip().splitlines()
-                    page_content.append((job_uids[counter], full_text))
-                except Exception as e:
-                    pass     
-            page_texts.append(page_content)
-            counter += 1
-            print('now parsing page :',counter)
-        html = []
-    page_texts_dict = {}
-    for i in page_texts:
-        page_texts_dict[i[0][0]] = i[0][1]
-    page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
-    page_texts_df['UID'] = page_texts_df['UID'].str.replace('Reference : ', '').astype(str)
-    with open('app/SQL/create_full_ad_text.sql', 'r') as file:
-        create_table_sql = file.read()
-    database_query(create_table_sql)
-    page_texts_df['scraped_date'] = str(todays_date)
-    rows = [tuple(x) for x in page_texts_df.to_numpy()]
-    for i in rows:
-        element = [i[0],str(i[1]).replace('[','').replace(']',''), i[2]]
-        database_query(f'''
-            insert into full_ad_text (uid, full_ad_text, scraped_date) values {element[0], element[1], element[2]}''') 
-    return page_texts_df
-
+    try:
+        for i in job_urls:
+            print('now scraping: ', i)
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')
+            driver = webdriver.Chrome(options=options)
+            driver.get(i)
+            driver.page_source
+            html.append(driver.page_source)
+            driver.quit()
+            for page_html in html:
+                soup = BeautifulSoup(page_html, 'html.parser')    
+                relevant_divs = soup.find('div', class_='vac_display_panel_main')
+                page_content = []  
+                for page_div in relevant_divs:    
+                    try: 
+                        full_text = page_div.get_text().strip().splitlines()
+                        page_content.append((job_uids[counter], full_text))
+                    except Exception as e:
+                        pass     
+                page_texts.append(page_content)
+                counter += 1
+                print('now parsing page :',counter)
+            html = []
+    except Exception as e:
+        print(e)
+    try: 
+        print('starting page_texts_dict')
+        page_texts_dict = {}
+        for i in page_texts:
+            try:
+                page_texts_dict[i[0][0]] = i[0][1]
+            except Exception as e:
+                print(i)
+                print('error when trying to add to page_texts_dict: ', e)
+                continue
+        page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
+        page_texts_df['UID'] = page_texts_df['UID'].str.replace('Reference : ', '').astype(str)
+        with open('app/SQL/create_full_ad_text.sql', 'r') as file:
+            create_table_sql = file.read()
+        database_query(create_table_sql)
+        page_texts_df['scraped_date'] = str(todays_date)
+        rows = [tuple(x) for x in page_texts_df.to_numpy()]
+        for i in rows:
+            element = [i[0],str(i[1]).replace('[','').replace(']',''), i[2]]
+            database_query(f'''
+                insert into full_ad_text (uid, full_ad_text, scraped_date) values {element[0], element[1], element[2]}''') 
+        return page_texts_df
+    except Exception as e:
+        print(e)
+        pass
 if __name__ == "__main__":
     full_ad(scrape(button_click()))
 

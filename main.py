@@ -24,18 +24,21 @@ def run_etl_pipeline(regardless_of_date=False):
         ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'scraped_date']
         full_text = pd.DataFrame(database_query('select * from full_ad_text'))
         full_text.columns = ['UID', 'Full Text', 'scraped_date']
-        print('starting application_process')
     else:
         ads = scrape(button_click())
         full_text = full_ad(ads)
-        application_process(full_text)
-        apply_at_advertisers_site(full_text)
-        civil_service_behaviours(full_text)
-        print('starting dict_to_df')
-        dict_to_def_setup_and_execution()
-        print('starting cleaning')
-        cleaning()
-        print('finished cleaning')
+        if ads.shape[0] == 0:
+            print('no new data')
+            return 'No new data found at last refresh on ' + str(todays_date)
+        else:
+            application_process(full_text)
+            apply_at_advertisers_site(full_text)
+            civil_service_behaviours(full_text)
+            print('starting dict_to_df')
+            dict_to_def_setup_and_execution()
+            print('starting cleaning')
+            cleaning()
+            print('finished cleaning')
     return f'Refreshed as of {str(todays_date)}'
 
 
@@ -45,11 +48,20 @@ def main():
     var_test = 'nothing'
     if request.method == 'POST':
         run_etl_pipeline(True) 
-    max_date = str(database_query('select max(scraped_date) from scraped_dates')).strip('[(,)]')
-    ads = pd.DataFrame(database_query('select * from cleaned_data'))
-    ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'scraped_date']
-    full_text = pd.DataFrame(database_query('select * from full_ad_text'))
-    full_text.columns = ['UID', 'Full Text', 'scraped_date']
+    run_etl_pipeline(True)
+    try:
+        max_date = str(database_query('select max(scraped_date) from scraped_dates')).strip('[(,)]')
+        ads = pd.DataFrame(database_query('select * from all_time_listings'))
+        ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'scraped_date', 'Full Text']
+        # full_text = pd.DataFrame(database_query('select * from full_ad_text'))
+        # full_text.columns = ['UID', 'Full Text', 'scraped_date']
+    except:
+        run_etl_pipeline()
+        max_date = str(database_query('select max(scraped_date) from scraped_dates')).strip('[(,)]')
+        ads = pd.DataFrame(database_query('select * from all_time_listings'))
+        ads.columns = ['Job Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'scraped_date', 'Full Text']
+    #     # full_text = pd.DataFrame(database_query('select * from full_ad_text'))
+    #     # full_text.columns = ['UID', 'Full Text', 'scraped_date']
 
     homepage_title = "CS Jobs Helper"
     main_content_title = 'Current vacancies'

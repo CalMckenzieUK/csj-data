@@ -61,7 +61,7 @@ def cleaning():
     print('1')
     rows = [tuple(x) for x in ad_qualities_df.to_numpy()]
     for i in rows:
-        database_query(f'''insert into ad_qualities (job_uid, 
+        database_query(f'''insert into ad_qualities (uid, 
         developing_self_and_others, 
         leadership,
         making_effective_decisions,
@@ -83,7 +83,13 @@ def cleaning():
         test)
         values {i}''')
     
-    new_df = pd.DataFrame(database_query('select * from ad_qualities limit 6;'))
+    with open('app/SQL/create_all_time_ad_qualities.sql', 'r') as file:
+        create_all_time_ad_qualities_table_sql = file.read()
+    database_query(create_all_time_ad_qualities_table_sql)
+
+    with open('app/SQL/insert_new_into_all_time_ad_qualities.sql', 'r') as file:
+        insert_all_time_ad_qualities_sql = file.read()
+    database_query(insert_all_time_ad_qualities_sql)
 
     with open('app/SQL/create_scraped_dates.sql', 'r') as file:
         create_scraped_table_sql = file.read()
@@ -101,7 +107,7 @@ def cleaning():
     database_query(insert_all_time_sql)
     print('4')
 
-    return new_df
+    return
     
 
 
