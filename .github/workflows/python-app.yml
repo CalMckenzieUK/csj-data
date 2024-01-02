@@ -25,5 +25,14 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run main
+      env:
+        ${{ secrets.DATABASE }}
+        ${{ secrets.DATABASE_HOST }}
+        ${{ secrets.DATABASE_PASSWORD }}
+        ${{ secrets.DATABASE_SERVICE_ID }}
+        ${{ secrets.DATABASE_SERVICE_TOKEN }}
+        ${{ secrets.DATABASE_USERNAME }}
+        ${{ secrets.MYSQL_ATTR_SSL_CA }}
+        ${{ secrets.PORT }}
       run: |
         python3 just_db_refresh.py
