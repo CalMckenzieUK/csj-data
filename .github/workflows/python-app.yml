@@ -3,7 +3,7 @@ name: Python application
 
 on:
   schedule:
-   - cron: '41 * * * *' 
+   - cron: '45 22 * * *' 
 
 permissions:
   contents: read
@@ -26,4 +26,4 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run main
       run: |
-        python3 main.py
+        python3 just_db_refresh.py
