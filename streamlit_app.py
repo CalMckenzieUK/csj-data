@@ -11,7 +11,7 @@ st.set_page_config(layout="wide")
 
 conn = st.connection("mysql", type="sql")
 df = conn.query('select * from all_time_listings')
-
+print(df.shape)
 df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'Full Text', 'scraped_date']
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
@@ -23,8 +23,8 @@ st.sidebar.subheader('Job Title')
 job_title_input = st.sidebar.text_input('Search for a job title').lower()
 st.sidebar.subheader('Department')
 department_input = st.sidebar.text_input('Search for a department').lower()
-st.sidebar.subheader('Date posted')
-date_input = st.sidebar.date_input('Search for a date posted')
+# st.sidebar.subheader('Date posted')
+# date_input = st.sidebar.date_input('Search for a date posted')
 st.sidebar.subheader('All text in ad')
 all_text_input = st.sidebar.text_input('Search all text in ad for a keyword').lower()
 st.sidebar.subheader('Location')
@@ -35,12 +35,21 @@ salary_range = st.sidebar.slider('Salary range', 0, max_sal, (0, max_sal))
 if st.sidebar.button('Clear Filters'):
     job_title_input = ''
     department_input = ''
+    all_text_input = ' '
+    location_input = ''
+
 
 # df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) &  
 #         df['Location'].str.lower().str.contains(location_input) & df['Salary_int'].between(salary_range[0], salary_range[1])]
     
-df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) & 
-        df['Full Text'].str.lower().str.contains(all_text_input) & df['Location'].str.lower().str.contains(location_input) & df['scraped_date'].str.contains(str(date_input))]
+df = df[
+      df['Title'].str.lower().str.contains(job_title_input) 
+        & 
+        df['Department'].str.lower().str.contains(department_input) 
+        # & 
+        # df['Full Text'].str.lower().str.contains(all_text_input) 
+        & df['Location'].str.lower().str.contains(location_input)
+        ]
 
 job_texts_containing_data = df.shape[0]
 phrase_line = ''

@@ -30,9 +30,10 @@ def button_click():
             #find next button called 'Go to next results page' and click on it
             driver.find_element(By.PARTIAL_LINK_TEXT, 'next').click()
             all_results_pages.append(driver.page_source)
-            print('clicked next page')
-        except:
-            print('no more pages')
+            print(f'clicked next page - added {len(all_results_pages)} pages so far')
+            sleep(2)
+        except Exception as e:
+            print('no more pages, exited with error: ', e)
             more_pages = False
     driver.quit()
     print('finished button_click')
@@ -131,6 +132,7 @@ def full_ad(df):
                     except Exception as e:
                         pass     
                 page_texts.append(page_content)
+                print(f'added {len(page_texts)} pages so far')
                 counter += 1
                 print('now parsing page :',counter)
             html = []

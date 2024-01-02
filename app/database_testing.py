@@ -37,9 +37,11 @@ if __name__ == '__main__':
     #         create_all_time_table_sql = file.read()
     # database_query(create_all_time_table_sql)
     
-    print(database_query('''
+#     print(database_query('''
 
-select count(*) from all_time_ad_qualities
-'''
+# select count(distinct(uid)) from all_time_listings;
+# '''
 
-    ))
+#     ))
+    df = pd.DataFrame(database_query('select full_ad_text from all_time_listings order by length(full_ad_text) asc;'))
+    print(df)

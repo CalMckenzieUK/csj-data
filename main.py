@@ -48,7 +48,6 @@ def main():
     var_test = 'nothing'
     if request.method == 'POST':
         run_etl_pipeline(True) 
-    run_etl_pipeline(True)
     try:
         max_date = str(database_query('select max(scraped_date) from scraped_dates')).strip('[(,)]')
         ads = pd.DataFrame(database_query('select * from all_time_listings'))

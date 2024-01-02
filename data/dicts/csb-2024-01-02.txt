@@ -1,0 +1,1 @@
+[[329486, {'Working Together': 'False', 'Communicating and Influencing': 'False', 'Developing Self and Others': 'False', 'Making Effective Decisions': 'False', 'Managing a Quality Service': 'True', 'Delivering at Pace': 'True', 'Seeing the Big Picture': 'False', 'Changing and Improving': 'False', 'Leadership': 'False'}]]
