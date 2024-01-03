@@ -26,13 +26,13 @@ jobs:
         sudo /etc/init.d/mysql start
     - name: Run main
       env:
-        DATABASE: ${{ secrets.DATABASE }},
-        DATABASE_HOST: ${{ secrets.DATABASE_HOST }},
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }},
-        DATABASE_SERVICE_ID: ${{ secrets.DATABASE_SERVICE_ID }},
-        DATABASE_SERVICE_TOKEN: ${{ secrets.DATABASE_SERVICE_TOKEN }},
-        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }},
-        MYSQL_ATTR_SSL_CA: ${{ secrets.MYSQL_ATTR_SSL_CA }},
+        DATABASE: ${{ secrets.DATABASE }}
+        DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_SERVICE_ID: ${{ secrets.DATABASE_SERVICE_ID }}
+        DATABASE_SERVICE_TOKEN: ${{ secrets.DATABASE_SERVICE_TOKEN }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        MYSQL_ATTR_SSL_CA: ${{ secrets.MYSQL_ATTR_SSL_CA }}
         PORT: ${{ secrets.PORT }}
       run: |
         python3 just_db_refresh.py
