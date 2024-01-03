@@ -14,7 +14,7 @@ import os
 todays_date = datetime.now().date() 
 
 def run_etl_pipeline():
-    
+        print(database_query('select * from all_time_listings limit 5'))
         ads = scrape(button_click())
         full_text = full_ad(ads)
         application_process(full_text)
