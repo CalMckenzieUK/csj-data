@@ -34,6 +34,7 @@ jobs:
         pip install -r requirements.txt
         sudo mysql -h 127.0.0.1 --port 8888 -u root -ppassword
         sudo mysql start
+        sudo mysql --user=root --password=root
     - name: Run main
       env:
         DATABASE: ${{ secrets.DATABASE }}
