@@ -24,7 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         sudo /etc/init.d/mysql start
-        sudo mysql -h 127.0.0.1 --port 8888 -u root
+        sudo mysql --host ${{ secrets.DATABASE_HOST }} --port ${{ secrets.PORT }} --user ${{ secrets.DATABASE_USERNAME }} --password ${{ secrets.DATABASE_PASSWORD }}
     - name: Run main
       env:
         DATABASE: ${{ secrets.DATABASE }}
