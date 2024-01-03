@@ -33,7 +33,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         sudo /etc/init.d/mysql start
-        mysql -h 127.0.0.1 --port 8888 -u root -ppassword
     - name: Run main
       env:
         DATABASE: ${{ secrets.DATABASE }}
