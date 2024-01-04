@@ -19,7 +19,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD}}
-          MYSQL_DATABASE: ${{ secrets.DATABASE }}
+          MYSQL_DATABASE: ${{ secrets.DATABASE_NAME }}
         ports:
             - '3306:3306'
     steps:
@@ -32,13 +32,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        sudo mysql start 
-        sudo mysql -u root -p -h 127.0.0.1
+        sudo mysql start -u root -p -h 127.0.0.1
     - name: Run main
       run: |
         python3 just_db_refresh.py
       env:
-        DATABASE: ${{ secrets.DATABASE }}
         DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         DATABASE_SERVICE_ID: ${{ secrets.DATABASE_SERVICE_ID }}
