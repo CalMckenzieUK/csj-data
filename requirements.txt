@@ -1,7 +1,8 @@
 pykg-config
 mysql-connector-python
 SQLAlchemy
-mysqlclient==2.2.1requests
+mysqlclient==2.2.1
+requests
 bs4
 datetime
 markupsafe
