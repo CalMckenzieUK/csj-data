@@ -16,10 +16,13 @@ df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID'
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
 df['Salary'] = df['Salary'].str.replace('£', '').str.replace(',','').astype(int)
+df['Closing Date filter'] = pd.to_datetime(df['Closing Date'])
 
 max_sal = df['Salary_int'].max()
 
 st.sidebar.title('Filters')
+st.sidebar.subheader('Included closed jobs?')
+closing_date_selector = st.sidebar.checkbox('Include', value=False)
 st.sidebar.subheader('Job Title')
 job_title_input = st.sidebar.text_input('Search for a job title').lower()
 st.sidebar.subheader('Department')
@@ -42,15 +45,26 @@ if st.sidebar.button('Clear Filters'):
 
 # df = df[df['Title'].str.lower().str.contains(job_title_input) & df['Department'].str.lower().str.contains(department_input) &  
 #         df['Location'].str.lower().str.contains(location_input) & df['Salary_int'].between(salary_range[0], salary_range[1])]
-    
-df = df[
-      df['Title'].str.lower().str.contains(job_title_input) 
+if closing_date_selector == False:
+        df = df[
+        df['Title'].str.lower().str.contains(job_title_input) 
         & 
         df['Department'].str.lower().str.contains(department_input) 
         & 
         df['Full Text'].str.lower().str.contains(all_text_input) 
         & df['Location'].str.lower().str.contains(location_input)
         & df['Salary_int'].between(salary_range[0], salary_range[1])
+        ]
+else:
+        df = df[
+        df['Title'].str.lower().str.contains(job_title_input) 
+        & 
+        df['Department'].str.lower().str.contains(department_input) 
+        & 
+        df['Full Text'].str.lower().str.contains(all_text_input) 
+        & df['Location'].str.lower().str.contains(location_input)
+        & df['Salary_int'].between(salary_range[0], salary_range[1])
+        & (df['Closing Date filter'] >= pd.to_datetime(todays_date))
         ]
 
 job_texts_containing_data = df.shape[0]
