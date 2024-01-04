@@ -1,4 +1,7 @@
-requests
+pykg-config
+mysql-connector-python
+SQLAlchemy
+mysqlclient==2.2.1requests
 bs4
 datetime
 markupsafe
@@ -8,6 +11,3 @@ selenium == 4.15.2
 streamlit_aggrid
 gunicorn==20.0.4
 python-dotenv
-SQLAlchemy
-mysqlclient==2.2.1
-pykg-config
