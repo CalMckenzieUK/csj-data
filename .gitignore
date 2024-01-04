@@ -2,4 +2,4 @@
 .env
 .streamlit
 __pycache__
-data
+/data
