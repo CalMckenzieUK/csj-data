@@ -19,7 +19,14 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          
+          DATABASE: ${{ secrets.DATABASE }}
+          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_SERVICE_ID: ${{ secrets.DATABASE_SERVICE_ID }}
+          DATABASE_SERVICE_TOKEN: ${{ secrets.DATABASE_SERVICE_TOKEN }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          MYSQL_ATTR_SSL_CA: ${{ secrets.MYSQL_ATTR_SSL_CA }}
+          PORT: ${{ secrets.PORT }}
 
 
         ports:
@@ -34,7 +41,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        sudo mysql -u ${{ secrets.DATABASE_USERNAME }} -p ${{ secrets.DATABASE_PASSWORD}} -h ${{ secrets.DATABASE_HOST }} 
     - name: Run main
       run: |
         python3 just_db_refresh.py
