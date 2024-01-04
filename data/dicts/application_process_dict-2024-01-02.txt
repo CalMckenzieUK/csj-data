@@ -1,1 +1,0 @@
-[[329486, [{'CV': 'False'}, {'Personal Statement': 'True'}, {'References': 'False'}, {'Application Form': 'True'}, {'Cover Letter': 'False'}, {'Presentation': 'True'}, {'Interview': 'True'}, {'Portfolio': 'False'}, {'Test': 'True'}]]]
