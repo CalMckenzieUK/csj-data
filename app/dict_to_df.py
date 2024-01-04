@@ -60,13 +60,13 @@ def dict_to_df_full_text(input, dict_name):
 
 def dict_to_def_setup_and_execution():
 
-    with open(f'data/dicts/application_process_dict-{todays_date}.txt', 'r') as f:
+    with open(f'data/dicts/application_process_dict.txt', 'r') as f:
         application_process_dict = eval(f.read())
 
-    with open(f'data/dicts/apply_at_advertisers_site-{todays_date}.txt', 'r') as f:
+    with open(f'data/dicts/apply_at_advertisers_site.txt', 'r') as f:
         apply_at_advertisers_sites_dict = eval(f.read())
 
-    with open(f'data/dicts/csb-{todays_date}.txt', 'r') as f:
+    with open(f'data/dicts/csb.txt', 'r') as f:
         csb_dict = eval(f.read())
 
     # with open(f'data/dicts/full_ad_text-{todays_date}.txt', 'r') as f:

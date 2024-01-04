@@ -45,7 +45,7 @@ def application_process(df):
     output_array = []
     for key, values in application_process_dict.items():
         output_array.append([key, values])
-    with open(f'data/dicts/application_process_dict-{todays_date}.txt', 'w') as f:
+    with open(f'data/dicts/application_process_dict.txt', 'w') as f:
         f.write(str(output_array))
     return application_process_dict
 
@@ -64,7 +64,7 @@ def apply_at_advertisers_site(df):
     output_array = []
     for key, values in apply_at_advertisers_sites_dict.items():
         output_array.append([key, values])
-    with open(f'data/dicts/apply_at_advertisers_site-{todays_date}.txt', 'w') as f:
+    with open(f'data/dicts/apply_at_advertisers_site.txt', 'w') as f:
         f.write(str(output_array))
 
     return apply_at_advertisers_sites_dict
@@ -85,7 +85,7 @@ def civil_service_behaviours(df):
     output_array = []
     for key, values in csb_dict.items():
         output_array.append([key, values])
-    with open(f'data/dicts/csb-{todays_date}.txt', 'w') as f:
+    with open(f'data/dicts/csb.txt', 'w') as f:
         f.write(str(output_array))
     return csb_dict
 
