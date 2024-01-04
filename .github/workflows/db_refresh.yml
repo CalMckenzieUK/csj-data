@@ -18,8 +18,10 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD}}
-          MYSQL_DATABASE: ${{ secrets.DATABASE_NAME }}
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          
+
+
         ports:
             - '3306:3306'
     steps:
