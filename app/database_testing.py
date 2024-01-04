@@ -43,5 +43,10 @@ if __name__ == '__main__':
 # '''
 
 #     ))
-    df = pd.DataFrame(database_query('select full_ad_text from all_time_listings order by length(full_ad_text) asc;'))
+    df = pd.DataFrame(database_query('''                  
+                    
+    select count(*) from all_time_listings where full_ad_text is not null;
+                                     
+                                    '''))
     print(df)
+

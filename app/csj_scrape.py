@@ -47,6 +47,7 @@ def scrape(url):
         soup = BeautifulSoup(i, 'html.parser')
         job_postings = soup.find_all('li', class_='search-results-job-box')
         for posting in job_postings:
+            print(posting)
             try: 
                 ad = posting.get_text().strip().splitlines()
                 url = posting.find('a')['href']
@@ -59,21 +60,22 @@ def scrape(url):
                 uid = ad[5]
                 job_url = str(url)
                 job_data.append([title, department, location, salary, closing_date, uid, job_url])
-            except:
-                pass
+            except Exception as e:
+                print('error when trying to add to job_data: ', e)
+                continue
         
-    
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
+    print(df.head())
     done_df = pd.DataFrame(database_query('select distinct(uid) from all_time_listings'))
     try: 
         uid_array = done_df[0].to_list()
     except: 
         uid_array = []
-    #if the uid is in the uid_array, remove it from the dataframe
+
     df['UID']=df['UID'].str.replace('Reference : ', '').astype(str)
     df_uid_array = df['UID'].to_list()
     df = df[~df['UID'].isin(uid_array)]
-    # df.to_csv(f'data/data-{todays_date}.csv', index=False)
+
     if df.shape[0] == 0:
         print('no new data')
         return df
@@ -139,11 +141,12 @@ def full_ad(df):
     except Exception as e:
         print(e)
     try: 
-        print('starting page_texts_dict')
+        print('starting page_texts_dict', len(page_texts), page_texts)
         page_texts_dict = {}
         for i in page_texts:
             try:
                 page_texts_dict[i[0][0]] = i[0][1]
+                print('added to page_texts_dict')
             except Exception as e:
                 print(i)
                 print('error when trying to add to page_texts_dict: ', e)
@@ -164,6 +167,7 @@ def full_ad(df):
         print(e)
         pass
 if __name__ == "__main__":
-    full_ad(scrape(button_click()))
+    scrape(button_click())
+    full_ad(pd.DataFrame(database_query('select * from scraped_data'), columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']))
 
 

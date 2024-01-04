@@ -11,11 +11,11 @@ def cleaning():
         print('Error when trying to query database for scraped_data: ', e)
     try:
         df_full_ad = pd.DataFrame(database_query('select * from full_ad_text'))
+        df_full_ad.columns = ['UID', 'Full Ad Text', 'scraped_date']
+        df_full_ad['UID'] = df_full_ad['UID'].str.replace('Reference : ', '').astype(str)
     except Exception as e:    
         print('Error when trying to query database for full_ad_text: ', e)
     df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
-    df_full_ad.columns = ['UID', 'Full Ad Text', 'scraped_date']
-    df_full_ad['UID'] = df_full_ad['UID'].str.replace('Reference : ', '').astype(str)
     df['UID'] = df['UID'].str.replace('Reference : ', '').astype(str)
     df = pd.merge(df, df_full_ad, on='UID', how='left')
     df['Salary'] = df['Salary'].str.extract(r'(\d{2,3},\d{3})')
@@ -26,7 +26,6 @@ def cleaning():
     df['Closing Date'] = pd.to_datetime(df['Closing Date'], format='%d %B %Y')
     df['Closing Date'] = df['Closing Date'].dt.date
     df['Closing Date'] = df['Closing Date'].astype(str)
-    df.to_csv(f'data/cleaned_data-{todays_date}.csv', index=False)
 
     with open('app/SQL/create_cleaned_data.sql', 'r') as file:
         create_table_sql = file.read()

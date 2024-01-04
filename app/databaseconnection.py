@@ -16,7 +16,6 @@ def database_query(sql_query):
     #     # ssl_mode="VERIFY_iDENTITY",
     #     ssl={"ca": "/etc/ssl/certs/ca-certificates.crt"})
     # except:
-    print(os.environ["DATABASE_HOST"])
     connection = MySQLdb.connect(
         host=os.environ["DATABASE_HOST"],
         user=os.environ["DATABASE_USERNAME"],
