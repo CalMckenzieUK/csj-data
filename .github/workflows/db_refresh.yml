@@ -45,7 +45,7 @@ jobs:
       run: |
         python3 just_db_refresh.py
       env:
-        DATABASE: lololol
+        DATABASE: ${{ secrets.DATABASE }}
         DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         DATABASE_SERVICE_ID: ${{ secrets.DATABASE_SERVICE_ID }}
