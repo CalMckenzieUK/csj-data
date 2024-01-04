@@ -15,6 +15,7 @@ print(df.shape)
 df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'Full Text', 'scraped_date']
 df['Salary'] = df['Salary'].fillna('0')
 df['Salary_int'] = df['Salary'].str.replace(',', '').astype(int)
+df['Salary'] = df['Salary'].str.replace('£', '').str.replace(',','').astype(int)
 
 max_sal = df['Salary_int'].max()
 
@@ -46,9 +47,10 @@ df = df[
       df['Title'].str.lower().str.contains(job_title_input) 
         & 
         df['Department'].str.lower().str.contains(department_input) 
-        # & 
-        # df['Full Text'].str.lower().str.contains(all_text_input) 
+        & 
+        df['Full Text'].str.lower().str.contains(all_text_input) 
         & df['Location'].str.lower().str.contains(location_input)
+        & df['Salary_int'].between(salary_range[0], salary_range[1])
         ]
 
 job_texts_containing_data = df.shape[0]
