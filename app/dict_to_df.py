@@ -56,22 +56,11 @@ def dict_to_df_full_text(input, dict_name):
 
 def dict_to_def_setup_and_execution():
 
-    # with open(f'data/dicts/application_process_dict.txt', 'r') as f:
-    #     application_process_dict = eval(f.read())
-    full_text = pd.DataFrame(database_query('select * from full_ad_text limit 100;'), columns=['UID', 'Full Text', 'Scraped Date'])
+
+    full_text = pd.DataFrame(database_query('select * from full_ad_text;'), columns=['UID', 'Full Text', 'Scraped Date'])
     application_process_dict = application_process(full_text)
-    # with open(f'data/dicts/apply_at_advertisers_site.txt', 'r') as f:
-    #     apply_at_advertisers_sites_dict = eval(f.read())
     apply_at_advertisers_sites_dict = apply_at_advertisers_site(full_text)
-
-    # with open(f'data/dicts/csb.txt', 'r') as f:
-    #     csb_dict = eval(f.read())
     csb_dict = civil_service_behaviours(full_text)
-
-
-
-
-
     dict_to_df(csb_dict, 'cs_behaviours')
     dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site')
     dict_to_df(application_process_dict, 'application_process')
