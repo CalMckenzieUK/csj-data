@@ -46,6 +46,7 @@ def application_process(df):
         output_array.append([key, values])
     with open(f'data/dicts/application_process_dict.txt', 'w') as f:
         f.write(str(output_array))
+    print('finished application_process_dict')
     return application_process_dict
 
 def apply_at_advertisers_site(df):
@@ -65,6 +66,7 @@ def apply_at_advertisers_site(df):
         output_array.append([key, values])
     with open(f'data/dicts/apply_at_advertisers_site.txt', 'w') as f:
         f.write(str(output_array))
+    print('finished apply_at_advertisers_sites_dict')
 
     return apply_at_advertisers_sites_dict
 
@@ -86,6 +88,7 @@ def civil_service_behaviours(df):
         output_array.append([key, values])
     with open(f'data/dicts/csb.txt', 'w') as f:
         f.write(str(output_array))
+    print('finished csb_dict')
     return csb_dict
 
 if __name__ == "__main__":
