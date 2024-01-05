@@ -1,7 +1,7 @@
 import streamlit as st 
 import pandas as pd
 from datetime import datetime
-# from app.databaseconnection import database_query
+from app.databaseconnection import database_query
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
 
 
@@ -9,8 +9,9 @@ todays_date = datetime.now().date()
 st.set_page_config(layout="wide")
 # try: df = pd.DataFrame(database_query('select * from cleaned_data'))
 
-conn = st.connection("mysql", type="sql")
-df = conn.query('select * from all_time_listings')
+# conn = st.connection("mysql", type="sql")
+# df = conn.query('select * from all_time_listings')
+df = pd.DataFrame(database_query('select * from all_time_listings'))
 print(df.shape)
 df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL', 'Full Text', 'scraped_date']
 df['Salary'] = df['Salary'].fillna('0')
