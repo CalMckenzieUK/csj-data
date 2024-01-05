@@ -11,7 +11,6 @@ def application_process(df):
     application_process_dict = {}
 
     for i in range(len(df['Full Text'])):
-        print(texts[i])
         cv = {'CV':'False'}
         personal_statement = {'Personal Statement':'False'}
         references = {'References':'False'}
