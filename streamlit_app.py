@@ -103,7 +103,7 @@ gb.configure_column("URL",
                                         }
                                 }       
                         """))
-gb.configure_default_column(min_column_width=235)
+gb.configure_default_column(min_column_width=100)
 gridOptions = gb.build()
 
 st.write(f''' \n Some headline stats from the data: 
@@ -114,4 +114,4 @@ st.write(f''' \n Some headline stats from the data:
         {phrase_line}  
          ''')
 output_df = df[['Title', 'Department','Location', 'Salary', 'Closing Date', 'URL']]
-AgGrid(output_df, gridOptions=gridOptions, height=500, allow_unsafe_jscode=True, allow_unsafe_html=True, width='100%')
+AgGrid(output_df, gridOptions=gridOptions, height=600, allow_unsafe_jscode=True, allow_unsafe_html=True, width='100%')
