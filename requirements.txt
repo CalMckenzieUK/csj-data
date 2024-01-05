@@ -3,6 +3,7 @@
 # SQLAlchemy
 # sqlalchemy
 # mysqlclient==2.2.1
+SQLAlchemy
 streamlit
 requests
 bs4
