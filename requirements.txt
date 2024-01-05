@@ -1,5 +1,5 @@
 # pykg-config
-# mysql-connector-python
+mysql-connector-python
 SQLAlchemy
 sqlalchemy
 # mysqlclient==2.2.1

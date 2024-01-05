@@ -4,3 +4,4 @@ build-essential
 SQLAlchemy
 sqlalchemy
 mysqlclient==2.2.1
+mysql-connector-python
