@@ -1,6 +1,7 @@
 # pykg-config
 # mysql-connector-python
 SQLAlchemy
+sqlalchemy
 # mysqlclient==2.2.1
 requests
 bs4
