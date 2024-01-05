@@ -47,7 +47,6 @@ def scrape(url):
         soup = BeautifulSoup(i, 'html.parser')
         job_postings = soup.find_all('li', class_='search-results-job-box')
         for posting in job_postings:
-            print(posting)
             try: 
                 ad = posting.get_text().strip().splitlines()
                 url = posting.find('a')['href']
