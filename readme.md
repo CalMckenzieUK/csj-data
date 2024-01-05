@@ -12,7 +12,7 @@ Basic UI on top of CSJ dataset which allows users to more quicky find vacancies 
 - [x] Table contains URL linking to another page w/ vacancy details
 - [ ] Essential criteria for postings aggregated and shown as selection box including count of vacancies requiring criteria
 - [ ] User can select essential criteria they meet and be shown jobs they would be a good fit for
-- [x] .gitignore and .env files required as app grows
 - [x] Tidy data about jobs to make filtering/sorting easier (eg. salary should only contain lowest figure, closing date should contain only datetime)
 - [ ] Show whether jobs require personal statement/cv/behaviours etc and be filtered accordingly
 - [ ] Option to get ask for support to align CV with application requirements
+- [ ] Surface data about most common CS Behaviours required as part of application process to aid prioritisation of job prep
