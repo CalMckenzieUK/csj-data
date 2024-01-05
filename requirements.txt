@@ -2,7 +2,7 @@ pykg-config
 Flask-SQLAlchemy
 mysql-connector-python
 SQLAlchemy
-mysqlclient=2.2.1
+mysqlclient==2.2.1
 streamlit
 requests
 bs4
