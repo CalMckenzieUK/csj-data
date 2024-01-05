@@ -1,7 +1,7 @@
 # pykg-config
 mysql-connector-python
 SQLAlchemy
-sqlalchemy
+sqlalchemy==2.0.22
 # mysqlclient==2.2.1
 streamlit
 requests
