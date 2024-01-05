@@ -1,7 +1,7 @@
 python3-dev
 default-libmysqlclient-dev
 build-essential
-SQLAlchemy
-sqlalchemy
+SQLAlchemy==2.0.22
+sqlalchemy==2.0.22
 mysqlclient==2.2.1
 mysql-connector-python
