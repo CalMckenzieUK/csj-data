@@ -1,8 +1,8 @@
 # pykg-config
 Flask-SQLAlchemy
 # mysql-connector-python
-SQLAlchemy as sqlalchemy
-# sqlalchemy==2.0.22
+SQLAlchemy
+sqlalchemy==2.0.22
 # mysqlclient==2.2.1
 streamlit
 requests
