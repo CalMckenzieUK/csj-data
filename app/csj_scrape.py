@@ -65,7 +65,6 @@ def scrape(url):
                 continue
         
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
-    print(df.head())
     done_df = pd.DataFrame(database_query('select distinct(uid) from all_time_listings'))
     try: 
         uid_array = done_df[0].to_list()
@@ -115,7 +114,6 @@ def full_ad(df):
     counter = 0
     try:
         for i in job_urls:
-            print('now scraping: ', i)
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')
             driver = webdriver.Chrome(options=options)
@@ -141,7 +139,7 @@ def full_ad(df):
     except Exception as e:
         print(e)
     try: 
-        print('starting page_texts_dict', len(page_texts), page_texts)
+        print('starting page_texts_dict', len(page_texts))
         page_texts_dict = {}
         for i in page_texts:
             try:
