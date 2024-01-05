@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 # from app.databaseconnection import database_query
 from st_aggrid import AgGrid, GridOptionsBuilder, JsCode
-import sqlalchemy
+# import sqlalchemy
 
 todays_date = datetime.now().date()
 st.set_page_config(layout="wide")
