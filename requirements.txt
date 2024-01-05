@@ -1,8 +1,9 @@
-pykg-config
-mysql-connector-python
-SQLAlchemy
-sqlalchemy
-mysqlclient==2.2.1
+# pykg-config
+# mysql-connector-python
+# SQLAlchemy
+# sqlalchemy
+# mysqlclient==2.2.1
+streamlit
 requests
 bs4
 datetime
