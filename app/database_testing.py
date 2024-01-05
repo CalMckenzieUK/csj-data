@@ -45,7 +45,7 @@ if __name__ == '__main__':
 #     ))
     df = pd.DataFrame(database_query('''                  
                     
-    select count(*) from all_time_listings where full_ad_text is not null;
+    select count(*) from cleaned_data;
                                      
                                     '''))
     print(df)
