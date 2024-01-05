@@ -1,9 +1,8 @@
 # pykg-config
 # mysql-connector-python
-# SQLAlchemy
-# sqlalchemy
-# mysqlclient==2.2.1
 SQLAlchemy
+sqlalchemy
+# mysqlclient==2.2.1
 streamlit
 requests
 bs4
