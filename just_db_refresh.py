@@ -15,8 +15,8 @@ todays_date = datetime.now().date()
 
 def run_etl_pipeline():
         scrape(button_click())
-        full_ad(pd.DataFrame(database_query('select * from scraped_data'), columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']))
-        full_text = pd.DataFrame(database_query('select * from full_ad_text'), columns=['UID', 'Full Text', 'Scraped Date'])
+        full_ad(pd.DataFrame(database_query('select * from scraped_data limit 100'), columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']))
+        full_text = pd.DataFrame(database_query('select * from full_ad_text limit 100'), columns=['UID', 'Full Text', 'Scraped Date'])
         # application_process(full_text)
         # apply_at_advertisers_site(full_text)
         # civil_service_behaviours(full_text)
