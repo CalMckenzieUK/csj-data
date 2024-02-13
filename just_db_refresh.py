@@ -25,7 +25,9 @@ def run_etl_pipeline():
         return
 
 def main():
-    run_etl_pipeline()
-
+    try:
+        run_etl_pipeline()
+    except Exception as e:
+        print('Error when trying to run ETL pipeline: ', e)
 if __name__ == '__main__':
     main()
