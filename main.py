@@ -47,7 +47,7 @@ def main():
     print('main triggered')
     var_test = 'nothing'
     if request.method == 'POST':
-        run_etl_pipeline(True) 
+        run_etl_pipeline(False) 
     try:
         max_date = str(database_query('select max(scraped_date) from scraped_dates')).strip('[(,)]')
         ads = pd.DataFrame(database_query('select * from all_time_listings'))
@@ -71,3 +71,4 @@ def main():
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
+    # run_etl_pipeline()

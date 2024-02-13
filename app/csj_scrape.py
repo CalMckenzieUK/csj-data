@@ -31,7 +31,6 @@ def button_click():
             driver.find_element(By.PARTIAL_LINK_TEXT, 'next').click()
             all_results_pages.append(driver.page_source)
             print(f'clicked next page - added {len(all_results_pages)} pages so far')
-            sleep(2)
         except Exception as e:
             print('no more pages, exited with error: ', e)
             more_pages = False
