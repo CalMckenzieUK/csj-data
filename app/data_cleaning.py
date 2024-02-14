@@ -28,11 +28,12 @@ def cleaning():
     closing_dates_dates = []
     for date in closing_dates:
         try:
-            closing_dates_dates.append(datetime.strptime(date, '%d %B %Y'))
+            closing_dates_dates.append(datetime.strptime(str(date), '%d %B %Y'))
         except:
-            closing_dates_dates.append(datetime.strptime(todays_date, '%d %b %Y'))
+            closing_dates_dates.append(pd.to_datetime(todays_date))
 
     # df['Closing Date'] = pd.to_datetime(df['Closing Date'], format='%d %B %Y')
+    df['Closing Date'] = closing_dates_dates
     df['Closing Date'] = df['Closing Date'].dt.date
     df['Closing Date'] = df['Closing Date'].astype(str)
 
