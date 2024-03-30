@@ -2,7 +2,6 @@ import os
 import MySQLdb
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 def database_query(sql_query):

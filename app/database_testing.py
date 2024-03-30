@@ -3,11 +3,11 @@ import MySQLdb
 from dotenv import load_dotenv
 import pandas as pd
 
-
 load_dotenv()
 
 def database_query(sql_query):
-    connection = MySQLdb.connect(
+    try:
+        connection = MySQLdb.connect(
         host=os.getenv("DATABASE_HOST"),
         user=os.getenv("DATABASE_USERNAME"),
         passwd=os.getenv("DATABASE_PASSWORD"),
@@ -15,7 +15,15 @@ def database_query(sql_query):
         autocommit=True,
         # ssl_mode="VERIFY_iDENTITY",
         ssl={"ca": "/etc/ssl/certs/ca-certificates.crt"})
-
+    except:
+        connection = MySQLdb.connect(
+        host=os.environ["DATABASE_HOST"],
+        user=os.environ["DATABASE_USERNAME"],
+        passwd=os.environ["DATABASE_PASSWORD"],
+        db=os.environ["DATABASE"],
+        autocommit=True,
+        # ssl_mode="VERIFY_iDENTITY",
+        ssl={"ca": "/etc/ssl/certs/ca-certificates.crt"})
     try:
         c = connection.cursor()
         c.execute(sql_query)
@@ -28,25 +36,4 @@ def database_query(sql_query):
         connection.close()
 
 if __name__ == '__main__':
-    # with open('app/SQL/create_ad_qualities.sql', 'r') as sql_file:
-    #     sql_query = sql_file.read()
-
-    sql_query = 'select max(scraped_dates) from scraped_dates;'
-    # print(str(database_query('select * from all_time_listings')).strip('[(,)]'))
-    # with open('app/SQL/create_all_time_listings.sql', 'r') as file:
-    #         create_all_time_table_sql = file.read()
-    # database_query(create_all_time_table_sql)
-    
-#     print(database_query('''
-
-# select count(distinct(uid)) from all_time_listings;
-# '''
-
-#     ))
-    df = pd.DataFrame(database_query('''                  
-                    
-    select count(*) from cleaned_data;
-                                     
-                                    '''))
-    print(df)
-
+    print(pd.DataFrame(database_query('select top 5 * from all_time_listings order by limit 5')).head(5))

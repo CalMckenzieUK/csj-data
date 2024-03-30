@@ -3,3 +3,14 @@
 .streamlit
 __pycache__
 /data
+*.csv
+*.txt
+*.png
+*.xlsx
+*.jpg
+*.jpeg
+*.pdf
+*.docx
+*.doc
+*.pptx
+*.ppt
