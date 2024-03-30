@@ -36,4 +36,4 @@ def database_query(sql_query):
         connection.close()
 
 if __name__ == '__main__':
-    print(pd.DataFrame(database_query('select top 5 * from all_time_listings order by limit 5')).head(5))
+    print(pd.DataFrame(database_query('select count(*) from all_time_listings where lower(department) like "%veterinary%"')).head(5))
