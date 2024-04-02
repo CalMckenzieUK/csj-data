@@ -21,7 +21,7 @@ def application_process(df):
         portfolio = {'Portfolio':'False'}
         test = {'Test':'False'}
 
-        if 'CV' in str(texts[i]).lower():
+        if 'cv' in str(texts[i]).lower():
             cv['CV'] = 'True'
         if 'personal statement' in str(texts[i]).lower():
             personal_statement['Personal Statement'] = 'True'
@@ -29,7 +29,7 @@ def application_process(df):
             references['References'] = 'True'
         if 'application form' in str(texts[i]).lower():
             application_form['Application Form'] = 'True'
-        if 'cover letter' in str(texts[i]).lower():
+        if 'cover letter' in str(texts[i]).lower() or 'covering letter' in str(texts[i]).lower():
             cover_letter['Cover Letter'] = 'True'
         if 'presentation' in str(texts[i]).lower():
             presentation['Presentation'] = 'True'
@@ -37,7 +37,7 @@ def application_process(df):
             interview['Interview'] = 'True'
         if 'portfolio' in str(texts[i]).lower():
             portfolio['Portfolio'] = 'True'
-        if 'test' in str(texts[i]).lower():
+        if ' test ' in str(texts[i]).lower():
             test['Test'] = 'True'
 
         application_process_dict[uids[i]] = [cv, personal_statement, references, application_form, cover_letter, presentation, interview, portfolio, test]

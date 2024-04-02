@@ -36,4 +36,21 @@ def database_query(sql_query):
         connection.close()
 
 if __name__ == '__main__':
-    print(pd.DataFrame(database_query('select count(*) from all_time_listings where lower(department) like "%veterinary%"')).head(5))
+    print(database_query(
+        """
+        update all_time_ad_qualities
+        left join all_time_listings on all_time_ad_qualities.uid = all_time_listings.uid
+        set cv = 1 
+        where LOWER(full_ad_text) like '%cv%'
+        and cv = 0;
+
+        
+        """
+        # update all_time_ad_qualities
+        # set cv = 1
+        # where uid in (
+        # select all_time_ad_qualities.uid from all_time_ad_qualities
+        # left join all_time_listings on all_time_ad_qualities.uid = all_time_listings.uid 
+        # where LOWER(full_ad_text) like '%cv%'
+        # and cv = 0);
+        ))
