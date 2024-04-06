@@ -38,12 +38,11 @@ def database_query(sql_query):
 if __name__ == '__main__':
     print(database_query(
         """
-        SELECT count(*) FROM all_time_ad_qualities
         
+        select title from all_time_listings
+        where title like '%data%'
+        union all
+        select title from all_time_listings
+        where title like '%analy%'
         """
-        # update all_time_ad_qualities
-        # left join all_time_listings on all_time_ad_qualities.uid = all_time_listings.uid
-        # set cv = 1 
-        # where LOWER(full_ad_text) like '%cv%'
-        # and cv = 0;
         ))
