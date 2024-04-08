@@ -15,3 +15,5 @@ streamlit_aggrid
 gunicorn==20.0.4
 python-dotenv
 plotnine
+pyodbc
+supabase
