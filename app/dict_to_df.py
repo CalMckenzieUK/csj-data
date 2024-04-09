@@ -7,7 +7,7 @@ from app.clear_staging_tables import clear_staging_tables
 from app.supabase_conn import superbase_read_all_rows, supabase_write_rows
 
 
-def dict_to_df(input, dict_name, columns: list):
+def dict_to_df(input, dict_name, new_columns: list):
     uids = []
     data  = []
     
@@ -28,7 +28,9 @@ def dict_to_df(input, dict_name, columns: list):
 
     #added below to replace three SQL scripts for csb_dict, apply_at_advertisers_sites_dict, application_process_dict
     clear_staging_tables({dict_name: 'uid'})
-    df.columns = columns
+    print('about to start renaming columns with the following columns: ', new_columns)
+    print(df.head())
+    df.columns = new_columns
     supabase_write_rows(df, dict_name)
 
 def dict_to_df_full_text(input, dict_name):

@@ -20,10 +20,12 @@ except:
     key = os.getenv("KEY")
     supabase: Client = create_client(url, key)
 
+MAX_PAGES = 10000
 load_dotenv()
 todays_date = date.today()
 
 def button_click():
+    global MAX_PAGES
     print('starting button_click')
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
@@ -37,12 +39,17 @@ def button_click():
     #all_results_pages is the first page of results
     #the below loop should click the next button until it can't find it anymore
     more_pages = True
+    pages = MAX_PAGES
     while more_pages:
         try:
-            #find next button called 'Go to next results page' and click on it
-            driver.find_element(By.PARTIAL_LINK_TEXT, 'next').click()
-            all_results_pages.append(driver.page_source)
-            print(f'clicked next page - added {len(all_results_pages)} pages so far')
+            
+                #find next button called 'Go to next results page' and click on it
+                driver.find_element(By.PARTIAL_LINK_TEXT, 'next').click()
+                all_results_pages.append(driver.page_source)
+                print(f'clicked next page - added {len(all_results_pages)} pages so far')
+                pages += 1
+                if pages > 3:
+                    more_pages = False
         except Exception as e:
             print('no more pages, exited with error: ', e)
             more_pages = False
@@ -99,6 +106,7 @@ def scrape(url):
         return df
     
 def full_ad(df):
+    print(df.head())
     if df.shape[0] == 0:
         print('no new data')
         return df

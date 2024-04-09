@@ -15,7 +15,7 @@ def supabase_write_rows(df, table_name):
         url: str = os.environ.get("URL")
         key = os.environ.get("KEY")
         supabase: Client = create_client(url, key)
-
+    print(df)
     supabase.table(table_name).insert(df).execute()
 
     print(f'updated table {table_name} with {len(df)} rows')
@@ -62,10 +62,10 @@ def superbase_delete_all_rows(table, column):
     return response
 if __name__ == '__main__':
     df = pd.DataFrame({'lol': ['John', 'Jane']})
-    #df = df.to_dict(orient='records')
-    #supabase_write_rows(df, 'lol')  
+    # df = df.to_dict(orient='records')
+    supabase_write_rows(df, 'lol')  
     response = superbase_read_all_rows('lol')
-    df = pd.DataFrame(superbase_read_all_rows('lol'), columns=['lol'])
+    # df = pd.DataFrame(superbase_read_all_rows('lol'), columns=['lol'])
     print(df)
     #supabase_write_rows(df, 'lol')
     # superbase_delete_all_rows('lol', 'lol')

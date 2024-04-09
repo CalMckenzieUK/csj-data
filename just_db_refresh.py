@@ -24,14 +24,15 @@ def run_etl_pipeline():
         scrape(button_click())
         print('completed scraping')
         scraped_df = pd.DataFrame(superbase_read_all_rows('scraped_data'))
-        print(scraped_df.head())
         scraped_df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
         full_ad(scraped_df)
+        print('completed full ad')
         # full_text = pd.DataFrame(database_query('select * from full_ad_text'), columns=['UID', 'Full Text', 'Scraped Date'])
         # application_process(full_text)
         # apply_at_advertisers_site(full_text)
         # civil_service_behaviours(full_text)
         dict_to_def_setup_and_execution()
+        print('commpleted dict to df')
         cleaning()
         return
 

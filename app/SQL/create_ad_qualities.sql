@@ -1,7 +1,7 @@
 drop table if exists ad_qualities; 
 create table ad_qualities
 (
-UID varchar(255) not null primary key, 
+uid varchar(255) not null primary key, 
 developing_self_and_others boolean, 
 leadership boolean,
 making_effective_decisions boolean,
