@@ -4,7 +4,7 @@ create table application_process
 UID varchar(255) not null primary key
 ,CV boolean
 ,personal_statement boolean
-,references boolean
+,reference boolean
 ,application_form boolean
 ,cover_letter boolean
 ,presentation boolean

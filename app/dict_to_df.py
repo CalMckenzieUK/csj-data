@@ -3,8 +3,11 @@ from datetime import datetime
 todays_date = datetime.now().date()
 from app.databaseconnection import database_query
 from app.nlp_analysis import application_process, apply_at_advertisers_site, civil_service_behaviours
+from app.clear_staging_tables import clear_staging_tables
+from app.supabase_conn import superbase_read_all_rows, supabase_write_rows
 
-def dict_to_df(input, dict_name):
+
+def dict_to_df(input, dict_name, columns: list):
     uids = []
     data  = []
     
@@ -18,27 +21,14 @@ def dict_to_df(input, dict_name):
                temp_dict.update(dicts)
            data.append(temp_dict)
     df = pd.DataFrame(data, index=uids)
-    df.index.name = 'UID'
+    df.index.name = 'uid'
     #turn index into column
     df.reset_index(level=0, inplace=True)
 
 
-    database_query(f"DROP TABLE IF EXISTS {dict_name};")
-    with open(f'app/SQL/create_{dict_name}.sql', 'r') as file:
-        create_table_sql = file.read()
-    database_query(create_table_sql)
-    table_columns = database_query(f"SHOW COLUMNS FROM {dict_name};")
-    table_columns = [i[0] for i in table_columns]
-    table_columns = ', '.join(table_columns).strip('[').strip(']')
-    rows = [tuple(x) for x in df.to_numpy()]
-    for i in rows:
-        element = []
-        for j in range(len(i)):
-            element.append(i[j])
-        element = ', '.join(str(e) for e in element).strip('[').strip(']')
-        database_query(f"""insert into {dict_name} ({table_columns}) values ({element})""")
-
-
+    #added below to replace three SQL scripts for csb_dict, apply_at_advertisers_sites_dict, application_process_dict
+    clear_staging_tables({dict_name: 'uid'})
+    supabase_write_rows(df, dict_name)
 
 def dict_to_df_full_text(input, dict_name):
     uids = []
@@ -56,14 +46,34 @@ def dict_to_df_full_text(input, dict_name):
 
 def dict_to_def_setup_and_execution():
 
-
-    full_text = pd.DataFrame(database_query('select * from full_ad_text;'), columns=['UID', 'Full Text', 'Scraped Date'])
+    full_text = superbase_read_all_rows('full_ad_text')
+    full_text = pd.DataFrame(full_text, columns=['uid', 'full_ad_text', 'scraped_date'])
     application_process_dict = application_process(full_text)
     apply_at_advertisers_sites_dict = apply_at_advertisers_site(full_text)
     csb_dict = civil_service_behaviours(full_text)
-    dict_to_df(csb_dict, 'cs_behaviours')
-    dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site')
-    dict_to_df(application_process_dict, 'application_process')
+    dict_to_df(csb_dict, 'cs_behaviours', [
+        'UID'
+        ,'making_effective_decisions'
+        ,'changing_and_improving'
+        ,'seeing_the_big_picture'
+        ,'communicating_and_influencing'
+        ,'working_together'
+        ,'managing_a_quality_service'
+        ,'leadership'
+        ,'delivering_at_pace'
+        ,'developing_self_and_others'])
+    dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site', ['UID', 'apply_at_advertisers_site'])
+    dict_to_df(application_process_dict, 'application_process', [
+                                                                 'UID'
+                                                                ,'CV'
+                                                                ,'personal_statement'
+                                                                ,'references'
+                                                                ,'application_form'
+                                                                ,'cover_letter'
+                                                                ,'presentation'
+                                                                ,'interview'
+                                                                ,'portfolio'
+                                                                ,'test'])
 
 
 if __name__ == '__main__':

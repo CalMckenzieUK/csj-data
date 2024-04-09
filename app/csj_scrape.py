@@ -6,8 +6,20 @@ from selenium.webdriver.common.by import By
 from time import sleep
 from datetime import datetime, date
 from app.databaseconnection import database_query
+from app.supabase_conn import supabase_write_rows, superbase_read_all_rows
 import os
 from dotenv import load_dotenv
+from supabase import create_client, Client
+
+try: 
+    url: str = os.environ.get("URL")
+    key = os.environ.get("KEY")
+    supabase: Client = create_client(url, key)
+except:
+    url = os.getenv("URL")
+    key = os.getenv("KEY")
+    supabase: Client = create_client(url, key)
+
 load_dotenv()
 todays_date = date.today()
 
@@ -63,9 +75,11 @@ def scrape(url):
                 continue
         
     df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
-    done_df = pd.DataFrame(database_query('select distinct(uid) from all_time_listings'))
+
+    done_df = supabase.table('all_time_listings').select('uid').execute()
+    done_df = done_df.data
     try: 
-        uid_array = done_df[0].to_list()
+        uid_array = set([i[uid] for i in done_df])
     except: 
         uid_array = []
 
@@ -77,26 +91,10 @@ def scrape(url):
         print('no new data')
         return df
     else:
-        with open('app/SQL/create_scraped_data.sql', 'r') as file:
-            create_table_sql = file.read()
-        database_query(create_table_sql)
-
-        rows = [tuple(x) for x in df.to_numpy()]
-        for i in rows:
-            print('adding to db')
-            database_query(f'''
-                insert into scraped_data 
-                    (title
-                    , department
-                    , location
-                    , salary
-                    , closing_date
-                    , uid
-                    , url)
-                values {i}''')
-
-
-
+        #removed table create_scraped_data SQL (create table & import), added table to clean_staging_tables
+        renamed_df = df
+        renamed_df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url']
+        supabase_write_rows(renamed_df, 'scraped_data')
         print('finished scrape')
         return df
     
@@ -149,21 +147,15 @@ def full_ad(df):
                 continue
         page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
         page_texts_df['UID'] = page_texts_df['UID'].str.replace('Reference : ', '').astype(str)
-        with open('app/SQL/create_full_ad_text.sql', 'r') as file:
-            create_table_sql = file.read()
-        database_query(create_table_sql)
+        #removed create)full_ad_text SQL (create table & import), added table to clean_staging_tables
         page_texts_df['scraped_date'] = str(todays_date)
-        rows = [tuple(x) for x in page_texts_df.to_numpy()]
-        for i in rows:
-            element = [i[0],str(i[1]).replace('[','').replace(']',''), i[2]]
-            database_query(f'''
-                insert into full_ad_text (uid, full_ad_text, scraped_date) values {element[0], element[1], element[2]}''') 
+        page_texts_df.columns = ['uid', 'full_ad_text', 'scraped_date']
+        supabase_write_rows(page_texts_df, 'full_ad_text')
         return page_texts_df
     except Exception as e:
         print(e)
         pass
 if __name__ == "__main__":
     scrape(button_click())
-    full_ad(pd.DataFrame(database_query('select * from scraped_data'), columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']))
-
-
+    scraped_df = superbase_read_all_rows('scraped_data')
+    full_ad(pd.DataFrame(scraped_df, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']))
