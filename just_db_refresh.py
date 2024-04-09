@@ -23,8 +23,9 @@ todays_date = datetime.now().date()
 def run_etl_pipeline():
         scrape(button_click())
         print('completed scraping')
-        scraped_df = pd.DataFrame(superbase_read_all_rows('scraped_data'), columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
+        scraped_df = pd.DataFrame(superbase_read_all_rows('scraped_data'))
         print(scraped_df.head())
+        scraped_df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
         full_ad(scraped_df)
         # full_text = pd.DataFrame(database_query('select * from full_ad_text'), columns=['UID', 'Full Text', 'Scraped Date'])
         # application_process(full_text)
@@ -44,7 +45,7 @@ def main():
                               , 'apply_at_advertisers_site': 'uid'
                               , 'cs_behaviours': 'uid'})
         run_etl_pipeline()
-        cleaning()
+        print('cleaning done')
         clear_staging_tables({'scraped_data':'uid'
                               ,'full_ad_text':'uid'
                               , 'cleaned_data': 'uid'

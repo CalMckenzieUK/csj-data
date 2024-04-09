@@ -28,6 +28,7 @@ def dict_to_df(input, dict_name, columns: list):
 
     #added below to replace three SQL scripts for csb_dict, apply_at_advertisers_sites_dict, application_process_dict
     clear_staging_tables({dict_name: 'uid'})
+    df.columns = columns
     supabase_write_rows(df, dict_name)
 
 def dict_to_df_full_text(input, dict_name):
@@ -52,7 +53,7 @@ def dict_to_def_setup_and_execution():
     apply_at_advertisers_sites_dict = apply_at_advertisers_site(full_text)
     csb_dict = civil_service_behaviours(full_text)
     dict_to_df(csb_dict, 'cs_behaviours', [
-        'UID'
+        'uid'
         ,'making_effective_decisions'
         ,'changing_and_improving'
         ,'seeing_the_big_picture'
@@ -62,12 +63,12 @@ def dict_to_def_setup_and_execution():
         ,'leadership'
         ,'delivering_at_pace'
         ,'developing_self_and_others'])
-    dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site', ['UID', 'apply_at_advertisers_site'])
+    dict_to_df(apply_at_advertisers_sites_dict, 'apply_at_advertisers_site', ['uid', 'apply_at_advertisers_site'])
     dict_to_df(application_process_dict, 'application_process', [
-                                                                 'UID'
-                                                                ,'CV'
+                                                                 'uid'
+                                                                ,'cv'
                                                                 ,'personal_statement'
-                                                                ,'references'
+                                                                ,'reference'
                                                                 ,'application_form'
                                                                 ,'cover_letter'
                                                                 ,'presentation'

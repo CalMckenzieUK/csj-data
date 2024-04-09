@@ -5,6 +5,7 @@ from datetime import datetime
 todays_date = datetime.now().date() 
 
 def application_process(df):
+    df.columns = ['UID', 'Full Text', 'Scraped Date']
     uids = df['UID'].str.extract('(\d+)', expand=False).astype(int)
     texts = df['Full Text']
     
