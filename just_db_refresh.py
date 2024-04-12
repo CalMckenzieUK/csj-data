@@ -38,22 +38,28 @@ def run_etl_pipeline():
 
 def main():
     try:
-        clear_staging_tables({'scraped_data':'uid'
-                              ,'full_ad_text':'uid'
-                              , 'cleaned_data': 'uid'
-                              , 'ad_qualities': 'uid'
-                              , 'application_process': 'uid'
-                              , 'apply_at_advertisers_site': 'uid'
-                              , 'cs_behaviours': 'uid'})
+        # clear_staging_tables({
+        #                     'scraped_data':'uid'
+        #                       ,
+        #                       #'full_ad_text':'uid'
+        #                       #, 
+        #                       'cleaned_data': 'uid'
+        #                       , 'ad_qualities': 'uid'
+        #                       , 'application_process': 'uid'
+        #                       , 'apply_at_advertisers_site': 'uid'
+        #                       , 'cs_behaviours': 'uid'})
         run_etl_pipeline()
         print('cleaning done')
-        clear_staging_tables({'scraped_data':'uid'
-                              ,'full_ad_text':'uid'
-                              , 'cleaned_data': 'uid'
-                              , 'ad_qualities': 'uid'
-                              , 'application_process': 'uid'
-                              , 'apply_at_advertisers_site': 'uid'
-                              , 'cs_behaviours': 'uid'})
+        # clear_staging_tables({
+        #      'scraped_data':'uid'
+        #                       #,
+        #                       #'full_ad_text':'uid'
+        #                       ,
+        #                         'cleaned_data': 'uid'
+        #                       , 'ad_qualities': 'uid'
+        #                       , 'application_process': 'uid'
+        #                       , 'apply_at_advertisers_site': 'uid'
+        #                       , 'cs_behaviours': 'uid'})
     except Exception as e:
         print('Error when trying to run ETL pipeline: ', e)
 if __name__ == '__main__':

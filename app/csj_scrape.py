@@ -1,15 +1,13 @@
-import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from time import sleep
 from datetime import datetime, date
-from app.databaseconnection import database_query
-from app.supabase_conn import supabase_write_rows, superbase_read_all_rows
 import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
+from app.databaseconnection import database_query
+from app.supabase_conn import supabase_write_rows, superbase_read_all_rows, superbase_delete_all_rows
 
 try: 
     url: str = os.environ.get("URL")
@@ -20,7 +18,7 @@ except:
     key = os.getenv("KEY")
     supabase: Client = create_client(url, key)
 
-MAX_PAGES = 10000
+MAX_PAGES = 1000
 load_dotenv()
 todays_date = date.today()
 
@@ -39,7 +37,7 @@ def button_click():
     #all_results_pages is the first page of results
     #the below loop should click the next button until it can't find it anymore
     more_pages = True
-    pages = MAX_PAGES
+    pages = 0
     while more_pages:
         try:
             
@@ -48,7 +46,7 @@ def button_click():
                 all_results_pages.append(driver.page_source)
                 print(f'clicked next page - added {len(all_results_pages)} pages so far')
                 pages += 1
-                if pages > 3:
+                if pages >= MAX_PAGES:
                     more_pages = False
         except Exception as e:
             print('no more pages, exited with error: ', e)
@@ -77,22 +75,21 @@ def scrape(url):
                 uid = ad[5]
                 job_url = str(url)
                 job_data.append([title, department, location, salary, closing_date, uid, job_url])
+                print('added to job_data')
             except Exception as e:
                 print('error when trying to add to job_data: ', e)
                 continue
         
-    df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL'])
+    df = pd.DataFrame(job_data, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'uid', 'URL'])
 
-    done_df = supabase.table('all_time_listings').select('uid').execute()
-    done_df = done_df.data
-    try: 
-        uid_array = set([i[uid] for i in done_df])
-    except: 
-        uid_array = []
-
-    df['UID']=df['UID'].str.replace('Reference : ', '').astype(str)
-    df_uid_array = df['UID'].to_list()
-    df = df[~df['UID'].isin(uid_array)]
+    done_df = superbase_read_all_rows('all_time_listings')
+    done_df = pd.DataFrame(done_df)
+    done_df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date']
+    uid_array = set(done_df['uid'])
+    print('uid_array:', uid_array)
+    df['uid']=df['uid'].str.replace('Reference : ', '').astype(str)
+    df_uid_array = df['uid'].to_list()
+    df = df[~df['uid'].isin(uid_array)]
 
     if df.shape[0] == 0:
         print('no new data')
@@ -101,21 +98,37 @@ def scrape(url):
         #removed table create_scraped_data SQL (create table & import), added table to clean_staging_tables
         renamed_df = df
         renamed_df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url']
-        supabase_write_rows(renamed_df, 'scraped_data')
+        supabase_write_rows(renamed_df, 'scraped_data', renamed_df.columns)
         print('finished scrape')
         return df
     
 def full_ad(df):
-    print(df.head())
+    table_name = 'scraped_data'
+    df.columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'uid', 'URL']
+    existing_rows = superbase_read_all_rows('all_time_listings')
+    existing_rows = pd.DataFrame(existing_rows)
+    df_uids = df['uid']
+    existing_uids = existing_rows['uid']
+    try:
+        if df_uids.dtypes != existing_uids.dtypes:
+            df['uid'] = df['uid'].astype(existing_rows['uid'].dtype)
+        existing_uids = existing_rows['uid'].tolist()
+        old_shape = df.shape
+        df = df[~df['uid'].isin(existing_uids)]
+        print(f'found some uids that have already been processed - now filtered from reprocessing. Old shape: {old_shape}, New shape: {df.shape}')
+
+    except:
+        pass
     if df.shape[0] == 0:
         print('no new data')
         return df
     print('starting full_ad')
-    job_uids = df['UID']
+    job_uids = df['uid']
     job_urls = df['URL']
     html = []
     page_texts = []
     counter = 0
+
     try:
         for i in job_urls:
             options = webdriver.ChromeOptions()
@@ -125,7 +138,9 @@ def full_ad(df):
             driver.page_source
             html.append(driver.page_source)
             driver.quit()
+
             for page_html in html:
+
                 soup = BeautifulSoup(page_html, 'html.parser')    
                 relevant_divs = soup.find('div', class_='vac_display_panel_main')
                 page_content = []  
@@ -141,7 +156,7 @@ def full_ad(df):
                 print('now parsing page :',counter)
             html = []
     except Exception as e:
-        print(e)
+        print('job_url loop failed because:', e)
     try: 
         print('starting page_texts_dict', len(page_texts))
         page_texts_dict = {}
@@ -153,8 +168,8 @@ def full_ad(df):
                 print(i)
                 print('error when trying to add to page_texts_dict: ', e)
                 continue
-        page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["UID", "Full Text"])
-        page_texts_df['UID'] = page_texts_df['UID'].str.replace('Reference : ', '').astype(str)
+        page_texts_df = pd.DataFrame(page_texts_dict.items(), columns=["uid", "Full Text"])
+        page_texts_df['uid'] = page_texts_df['uid'].str.replace('Reference : ', '').astype(str)
         #removed create)full_ad_text SQL (create table & import), added table to clean_staging_tables
         page_texts_df['scraped_date'] = str(todays_date)
         page_texts_df.columns = ['uid', 'full_ad_text', 'scraped_date']
@@ -162,8 +177,8 @@ def full_ad(df):
         return page_texts_df
     except Exception as e:
         print(e)
-        pass
 if __name__ == "__main__":
+    superbase_delete_all_rows('scraped_data', 'uid')
     scrape(button_click())
     scraped_df = superbase_read_all_rows('scraped_data')
-    full_ad(pd.DataFrame(scraped_df, columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']))
+    full_ad(pd.DataFrame(scraped_df))

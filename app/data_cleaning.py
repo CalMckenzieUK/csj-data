@@ -8,16 +8,17 @@ todays_date = datetime.now().date()
 csv_import = False
 
 def cleaning():
-    if csv_import == False:
-        superbase_delete_all_rows('cleaned_data', 'uid') 
-        superbase_delete_all_rows('ad_qualities', 'uid')   
+    global csv_import
+    # if csv_import == False:
+    #     superbase_delete_all_rows('cleaned_data', 'uid') 
+    #     superbase_delete_all_rows('ad_qualities', 'uid')   
     try: 
         
         if csv_import == False:
             df = pd.DataFrame(superbase_read_all_rows('scraped_data'))
         else:
             df = pd.DataFrame(pd.read_csv('./scraped_data.csv'))
-        df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
+        df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'uid', 'URL']
     except Exception as e:        
         print('Error when trying to query database for scraped_data: ', e)
     try:
@@ -25,14 +26,14 @@ def cleaning():
             df_full_ad = pd.DataFrame(superbase_read_all_rows('full_ad_text'))
         else:
             df_full_ad = pd.DataFrame(pd.read_csv('./full_ad_text.csv'))
-        df_full_ad.columns = ['UID', 'Full Ad Text', 'scraped_date']
-        df_full_ad['UID'] = df_full_ad['UID'].astype(str).str.replace('Reference : ', '').astype(str)
+        df_full_ad.columns = ['uid', 'Full Ad Text', 'scraped_date']
+        df_full_ad['uid'] = df_full_ad['uid'].astype(str).str.replace('Reference : ', '').astype(str)
     except Exception as e:    
         print('Error when trying to query database for full_ad_text: ', e)
-    df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'UID', 'URL']
+    df.columns = ['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'uid', 'URL']
 
-    df['UID'] = df['UID'].astype(str).str.replace('Reference : ', '').astype(str)
-    df = pd.merge(df, df_full_ad, on='UID', how='left')
+    df['uid'] = df['uid'].astype(str).str.replace('Reference : ', '').astype(str)
+    df = pd.merge(df, df_full_ad, on='uid', how='left')
     df['Salary'] = df['Salary'].str.extract(r'(\d{2,3},\d{3})')
     
     if csv_import == True:
@@ -61,14 +62,17 @@ def cleaning():
     df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'scraped_date']
     
     print('pre')
-    supabase_write_rows(df, 'cleaned_data')
+    if df.shape[0] == 0:
+        print('no new data')
+    else:
+        supabase_write_rows(df, 'cleaned_data')
     print('post')
     try:    
         if csv_import == False:
             csb_df = pd.DataFrame(superbase_read_all_rows('cs_behaviours'))
         else: 
             csb_df = pd.DataFrame(pd.read_csv('./cs_behaviours.csv'))
-        csb_df.columns = ['UID'
+        csb_df.columns = ['uid'
                                                                                     , 'making_effective_decisions'
                                                                                     , 'changing_and_improving'
                                                                                     , 'seeing_the_big_picture'
@@ -84,14 +88,14 @@ def cleaning():
             apply_at_advertisers_df = pd.DataFrame(superbase_read_all_rows('apply_at_advertisers_site'))
         else:
             apply_at_advertisers_df = pd.DataFrame(pd.read_csv('./apply_at_advertisers_site.csv'))
-        apply_at_advertisers_df.columns = ['UID', 'apply_at_advertisers_site']
+        apply_at_advertisers_df.columns = ['uid', 'apply_at_advertisers_site']
     except Exception as e: print('Error when trying to query database for apply_at_advertisers_site: ', e)
     try: 
         if csv_import == False:
             application_process_df = pd.DataFrame(superbase_read_all_rows('application_process'))
         else: 
             application_process_df = pd.DataFrame(pd.read_csv('./application_process.csv'))
-        application_process_df.columns=['UID'
+        application_process_df.columns=['uid'
                                                                                             , 'CV'
                                                                                             , 'personal_statement'
                                                                                             , 'reference'
@@ -103,13 +107,13 @@ def cleaning():
                                                                                             , 'test']
     except Exception as e: print('Error when trying to query database for application_process: ', e)
 
-    #csb_df columns: UID, Seeing the Big Picture, Changing and Improving, Making Effective Decisions, Communicating and Influencing, Leadership, Working Together, Delivering at Pace, Managing a Quality Service, Developing Self and Others
-    #csb_df.columns = ['UID', 'Making Effective Decisions', 'Changing and Improving', 'Seeing the Big Picture', 'Communicating and Influencing', 'Working Together', 'Managing a Quality Service', 'Leadersip', 'Delivering at Pace', 'Developing Self and Others']
-    #apply_at_advertisers_df.columns = ['UID', 'Apply at Advertiser\'s Site']
-    #application_process_df.columns = ['UID', 'CV', 'Personal Statement', 'References', 'Application Form', 'Cover Letter', 'Presentation', 'Interview', 'Portfolio', 'Test']
+    #csb_df columns: uid, Seeing the Big Picture, Changing and Improving, Making Effective Decisions, Communicating and Influencing, Leadership, Working Together, Delivering at Pace, Managing a Quality Service, Developing Self and Others
+    #csb_df.columns = ['uid', 'Making Effective Decisions', 'Changing and Improving', 'Seeing the Big Picture', 'Communicating and Influencing', 'Working Together', 'Managing a Quality Service', 'Leadersip', 'Delivering at Pace', 'Developing Self and Others']
+    #apply_at_advertisers_df.columns = ['uid', 'Apply at Advertiser\'s Site']
+    #application_process_df.columns = ['uid', 'CV', 'Personal Statement', 'References', 'Application Form', 'Cover Letter', 'Presentation', 'Interview', 'Portfolio', 'Test']
 
-    ad_qualities_df = pd.merge(csb_df, apply_at_advertisers_df, on='UID', how='left')
-    ad_qualities_df = pd.merge(ad_qualities_df, application_process_df, on='UID', how='left')
+    ad_qualities_df = pd.merge(csb_df, apply_at_advertisers_df, on='uid', how='left')
+    ad_qualities_df = pd.merge(ad_qualities_df, application_process_df, on='uid', how='left')
 
     # ad_qualities_df.to_csv(f'data/ad_qualities-{todays_date}.csv', index=False)
     
@@ -117,7 +121,7 @@ def cleaning():
     ad_qualities_df.columns = ['uid', 'developing_self_and_others', 'leadership', 'making_effective_decisions', 'seeing_the_big_picture', 'managing_a_quality_service', 'working_together', 'communicating_and_influencing', 'changing_and_improving', 'delivering_at_pace', 'apply_at_advertisers_site', 'cv', 'personal_statement', 'reference_request', 'application_form', 'cover_letter', 'presentation', 'interview', 'portfolio', 'test']
     supabase_write_rows(ad_qualities_df, 'ad_qualities')
     latest_ad_qualities_uids = ad_qualities_df['uid'].unique()
-    all_time_ad_qualities_df = pd.DataFrame(superbase_read_all_rows('ad_qualities'))
+    all_time_ad_qualities_df = pd.DataFrame(superbase_read_all_rows('all_time_ad_qualities'))
     all_time_ad_qualities_df.columns=[
                                                                                             'uid'
     , 'developing_self_and_others'
@@ -143,16 +147,17 @@ def cleaning():
     print(ad_qualities_df['uid'])
     #filter ad_qualities_df to show only uids not in all_time_ad_qualities_df
     all_time_ad_qualities_df['uid'] = all_time_ad_qualities_df['uid'].astype(int)
+    ad_qualities_df['uid'] = ad_qualities_df['uid'].astype(int)
     if len(all_time_ad_qualities_df) > 0:
         ad_qualities_df = ad_qualities_df[~ad_qualities_df['uid'].isin(all_time_ad_qualities_df['uid'])]
 
-    print(ad_qualities_df['uid'])
-    supabase_write_rows(ad_qualities_df, 'all_time_ad_qualities')
+    print('152')
+    supabase_write_rows(ad_qualities_df, 'all_time_ad_qualities', ad_qualities_df.columns)
     print('1.5')
     todays_date_df = pd.DataFrame({'scraped_date': str(todays_date)}, index=[0])
     
     print('1.6')
-    supabase_write_rows(todays_date_df, 'scraped_dates')
+    # supabase_write_rows(todays_date_df, 'scraped_dates')
     print('2')
 
     print('3')
@@ -172,7 +177,7 @@ def cleaning():
     else:
         full_ad_df = pd.DataFrame(pd.read_csv('./full_ad_text.csv'))
     full_ad_df.columns=['uid', 'full_ad_text', 'scraped_date']
-    cleaned_df['uid'] = cleaned_df['uid'].astype(int)
+    # cleaned_df['uid'] = cleaned_df['uid'].astype(int)
     cleaned_df = pd.merge(cleaned_df, full_ad_df, on='uid', how='left')
     cleaned_df = cleaned_df[['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date_y']]
     cleaned_df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date']
@@ -189,9 +194,11 @@ def cleaning():
             all_time_listings_df = pd.DataFrame({'title':[], 'department':[], 'location':[], 'salary':[], 'closing_date':[], 'uid':[], 'url':[], 'full_ad_text':[], 'scraped_date':[]})
     all_time_listings_df.columns=['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date']
     all_time_listings_uids = all_time_listings_df['uid'].unique()
+    
     if len(all_time_listings_uids) > 0:
         cleaned_df = cleaned_df[~cleaned_df['uid'].isin(all_time_listings_uids)]
-    supabase_write_rows(cleaned_df, 'all_time_listings')
+    print(cleaned_df.head())
+    supabase_write_rows(cleaned_df, 'all_time_listings', cleaned_df.columns)
     print('4')
 
     return
