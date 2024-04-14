@@ -28,6 +28,8 @@ jobs:
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           MYSQL_ATTR_SSL_CA: ${{ secrets.MYSQL_ATTR_SSL_CA }}
           PORT: ${{ secrets.PORT }}
+          KEY: ${{ secrets.KEY }}
+          URL: ${{ secrets.URL }}
 
 
         ports:
@@ -54,3 +56,5 @@ jobs:
         DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
         MYSQL_ATTR_SSL_CA: ${{ secrets.MYSQL_ATTR_SSL_CA }}
         PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.KEY }}
+        URL: ${{ secrets.URL }}
