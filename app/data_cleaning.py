@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime
-from app.databaseconnection import database_query
+# from databaseconnection import database_query
 from app.supabase_conn import supabase_write_rows, superbase_read_all_rows, superbase_delete_all_rows
 
 todays_date = datetime.now().date()
@@ -65,7 +65,7 @@ def cleaning():
     if df.shape[0] == 0:
         print('no new data')
     else:
-        supabase_write_rows(df, 'cleaned_data')
+        supabase_write_rows(df, 'cleaned_data', df.columns)
     print('post')
     try:    
         if csv_import == False:
@@ -119,7 +119,7 @@ def cleaning():
     
     print('1')
     ad_qualities_df.columns = ['uid', 'developing_self_and_others', 'leadership', 'making_effective_decisions', 'seeing_the_big_picture', 'managing_a_quality_service', 'working_together', 'communicating_and_influencing', 'changing_and_improving', 'delivering_at_pace', 'apply_at_advertisers_site', 'cv', 'personal_statement', 'reference_request', 'application_form', 'cover_letter', 'presentation', 'interview', 'portfolio', 'test']
-    supabase_write_rows(ad_qualities_df, 'ad_qualities')
+    supabase_write_rows(ad_qualities_df, 'ad_qualities', ad_qualities_df.columns)
     latest_ad_qualities_uids = ad_qualities_df['uid'].unique()
     all_time_ad_qualities_df = pd.DataFrame(superbase_read_all_rows('all_time_ad_qualities'))
     all_time_ad_qualities_df.columns=[
@@ -150,9 +150,8 @@ def cleaning():
     ad_qualities_df['uid'] = ad_qualities_df['uid'].astype(int)
     if len(all_time_ad_qualities_df) > 0:
         ad_qualities_df = ad_qualities_df[~ad_qualities_df['uid'].isin(all_time_ad_qualities_df['uid'])]
-
     print('152')
-    supabase_write_rows(ad_qualities_df, 'all_time_ad_qualities', ad_qualities_df.columns)
+    supabase_write_rows(ad_qualities_df, 'all_time_ad_qualities', ad_qualities_df.columns, True)
     print('1.5')
     todays_date_df = pd.DataFrame({'scraped_date': str(todays_date)}, index=[0])
     
@@ -177,19 +176,20 @@ def cleaning():
     else:
         full_ad_df = pd.DataFrame(pd.read_csv('./full_ad_text.csv'))
     full_ad_df.columns=['uid', 'full_ad_text', 'scraped_date']
-    # cleaned_df['uid'] = cleaned_df['uid'].astype(int)
+    cleaned_df['uid'] = cleaned_df['uid'].astype(int)
+    full_ad_df['uid'] = full_ad_df['uid'].astype(int)
     cleaned_df = pd.merge(cleaned_df, full_ad_df, on='uid', how='left')
-    cleaned_df = cleaned_df[['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date_y']]
+    print(cleaned_df.columns)
+    cleaned_df = cleaned_df[['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date_x']]
     cleaned_df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date']
+    print(cleaned_df.head())
     latest_cleaned_uids = cleaned_df['uid'].unique()
     if csv_import == False:
-        try:
-            all_time_listings_df = pd.DataFrame(superbase_read_all_rows('all_time_listings'))
-        except:
-            all_time_listings_df = pd.DataFrame({'title':[], 'department':[], 'location':[], 'salary':[], 'closing_date':[], 'uid':[], 'url':[], 'full_ad_text':[], 'scraped_date':[]})
+        all_time_listings_df = pd.DataFrame(superbase_read_all_rows('all_time_listings'))
     else:
         try:
             all_time_listings_df = pd.DataFrame(pd.read_csv('./all_time_listings.csv'))
+            
         except:
             all_time_listings_df = pd.DataFrame({'title':[], 'department':[], 'location':[], 'salary':[], 'closing_date':[], 'uid':[], 'url':[], 'full_ad_text':[], 'scraped_date':[]})
     all_time_listings_df.columns=['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date']
@@ -197,8 +197,7 @@ def cleaning():
     
     if len(all_time_listings_uids) > 0:
         cleaned_df = cleaned_df[~cleaned_df['uid'].isin(all_time_listings_uids)]
-    print(cleaned_df.head())
-    supabase_write_rows(cleaned_df, 'all_time_listings', cleaned_df.columns)
+    supabase_write_rows(cleaned_df, 'all_time_listings', cleaned_df.columns, False)
     print('4')
 
     return

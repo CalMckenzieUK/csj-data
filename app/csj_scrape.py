@@ -85,24 +85,25 @@ def scrape(url):
     done_df = superbase_read_all_rows('all_time_listings')
     done_df = pd.DataFrame(done_df)
     done_df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url', 'full_ad_text', 'scraped_date']
-    uid_array = set(done_df['uid'])
-    print('uid_array:', uid_array)
+    uid_array = done_df['uid'].to_list()
     df['uid']=df['uid'].str.replace('Reference : ', '').astype(str)
     df_uid_array = df['uid'].to_list()
     df = df[~df['uid'].isin(uid_array)]
+    df = df[~df['uid'].isin(df_uid_array)]
 
     if df.shape[0] == 0:
         print('no new data')
-        return df
+        return 0
     else:
         #removed table create_scraped_data SQL (create table & import), added table to clean_staging_tables
         renamed_df = df
         renamed_df.columns = ['title', 'department', 'location', 'salary', 'closing_date', 'uid', 'url']
+        print('issue here?')
         supabase_write_rows(renamed_df, 'scraped_data', renamed_df.columns)
         print('finished scrape')
-        return df
+        return 1
     
-def full_ad(df):
+def full_ad(df: pd.DataFrame):
     table_name = 'scraped_data'
     df.columns=['Title', 'Department', 'Location', 'Salary', 'Closing Date', 'uid', 'URL']
     existing_rows = superbase_read_all_rows('all_time_listings')
@@ -110,7 +111,7 @@ def full_ad(df):
     df_uids = df['uid']
     existing_uids = existing_rows['uid']
     try:
-        if df_uids.dtypes != existing_uids.dtypes:
+        if set(df.dtypes) != set(existing_uids.dtypes):
             df['uid'] = df['uid'].astype(existing_rows['uid'].dtype)
         existing_uids = existing_rows['uid'].tolist()
         old_shape = df.shape
@@ -179,6 +180,8 @@ def full_ad(df):
         print(e)
 if __name__ == "__main__":
     superbase_delete_all_rows('scraped_data', 'uid')
-    scrape(button_click())
+    new_values = scrape(button_click())
+    if new_values == 0:
+        print('no new values, ending script')
     scraped_df = superbase_read_all_rows('scraped_data')
     full_ad(pd.DataFrame(scraped_df))
